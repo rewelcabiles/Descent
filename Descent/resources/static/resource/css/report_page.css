@@ -1,0 +1,35 @@
+@media screen{
+	.print_header{
+		visibility: hidden;
+	}
+	.print_table {
+		background-color: white;
+	}
+}
+
+@media print {
+	body * {
+		visibility: hidden;
+	}
+	#printable, #printable * {
+		visibility: visible;
+	}
+	#printable {
+		position: absolute;
+		width:100%;
+		left: 0;
+		top: 0;
+	}
+	hr {
+		display:block;
+	}
+	#har {
+		display:block;
+	}
+	.print_table {
+		page-break-inside:auto;
+	}
+	.print_table tr{
+		page-break-inside:avoid; page-break-after:auto
+	}
+}

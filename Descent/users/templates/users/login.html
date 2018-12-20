@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <h1>LOGIN</h1>
+  <form method='POST'>
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+      <div class="form-group">
+        <label class="form-control-label"><b>{{ form.username.label }}</b></label>
+
+        {% if form.username.errors %}
+          {{ form.username(class="form-control form-control-lg is-invalid txtbox") }}
+          <div class="invalid-feedback">
+            {% for error in form.username.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>  
+        {% else %}            
+          {{ form.username(class="form-control form-control-lg txtbox") }}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-control-label"><b>PASSWORD</b></label>
+        {% if form.password.errors %}
+          {{ form.password(class="form-control form-control-lg is-invalid txtbox") }}
+          <div class="invalid-feedback">
+            {% for error in form.password.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>  
+        {% else %}            
+          {{ form.password(class="form-control form-control-lg txtbox") }}
+        {% endif %}
+      </div>
+      <div class="form-group">
+      {{ form.submit(class="btn btn-primary" ,style="width:100%") }}
+    </div>
+
+    </fieldset>
+  </form>
+{% endblock %}
