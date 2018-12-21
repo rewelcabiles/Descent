@@ -15,6 +15,7 @@ setup(
             'flask_sqlalchemy',
             'flask_bcrypt',
             'pymysql',
-            'flask-socketio'
+            'flask-socketio',
+            'eventlet'
             ]
         )

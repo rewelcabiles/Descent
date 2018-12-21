@@ -1,0 +1,10 @@
+.account_box{
+	width:35%;
+	height:75%;
+	margin-top:40px;
+	padding-left:50px;
+	padding-right:50px;
+	background-color: white;
+  	box-shadow: 10px 10px 5px black;
+}
+

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    {% block meta %} {% endblock %}
+
+    <!-- Bootstrap and Other Style Sheets-->
+    <link href="{{ url_for('resources.static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('resources.static', filename='css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('resources.static', filename='css/blurred_background.css') }}" rel="stylesheet">
+    <link href="{{ url_for('resources.static', filename='css/common_styles.css') }}" rel="stylesheet">
+    <!-- Custom Style Sheets-->
+    {% block head %} {% endblock %}
+  </head>
+
+  <body>
+  <div class="content container">
+  {% block body %} {% endblock %}
+  </div>
+  {% block foot %} {% endblock %}
+  <script src="{{ url_for('resources.static', filename='js/jquery-3.3.1.min.js') }}"></script>
+  <script src="{{ url_for('resources.static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  </body>
+</html>

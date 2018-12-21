@@ -1,0 +1,25 @@
+.content:before {
+  content: "";
+  position: fixed;
+  left: -5%;
+  right: 0;
+  top:-5%;
+  z-index: -1;
+  
+  display: block;
+  background-image: url('../images/background.jpg');
+  background-repeat:repeat;
+  
+  width: 110%;
+  height: 110%;
+   -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+.content {
+  overflow: auto;
+  position: relative;
+}

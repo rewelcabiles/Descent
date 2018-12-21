@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 from Descent import app
+from flask_socketio import SocketIO
+
+socketio = SocketIO(app)
 
 if __name__ == '__main__':
-	app.run(debug=True, host='0.0.0.0')
+        socketio.run(app)
 
