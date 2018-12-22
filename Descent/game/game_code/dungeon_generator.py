@@ -46,7 +46,6 @@ for room in rooms:
         rotated_room_points.append(room_points)
         room = rotate_matrix_clockwise(room)
         i += 1
-end = time.perf_counter()
 
 
 class Dungeon():
@@ -56,12 +55,6 @@ class Dungeon():
         self.floor_num = 0
 
 
-class Tile():
-    def __init__(self, cell_name, room_id=0, value=0, weight=9999):
-        self.room_id = room_id
-        self.value = value
-        self.weight = weight
-        self.cell_name = cell_name
 
 
 class Generator():
@@ -69,23 +62,16 @@ class Generator():
         pass
 
     def create_map(self):
-        print("===========================")
-        print("== Using StackOF answer  ==")
         mapstart = time.perf_counter()
         current_map = self.create_floor()
-        self.dijkstras_algorithm(current_map)
-        mapend = time.perf_counter()
-        print("V  ) Total Dungeon Creation Time Elapsed: "+str(mapend-mapstart))
+        current_map = self.dijkstras_algorithm(current_map)
+        return current_map
 
     def create_floor(self):
-        start = time.perf_counter()
-        # Define Floor Parameters
         max_x, max_y = 48, 48
-        rooms = []
-        # Create Empty Floor Map
         current_map = [[0] * max_x for _ in range(max_y)]
-        cell_name = 100
 
+        cell_name = 100
         for y in range(len(current_map)):
             for x in range(len(current_map[y])):
                 current_map[y][x] = {
@@ -95,7 +81,8 @@ class Generator():
                     "cell_name": cell_name
                 }
                 cell_name += 1
-        timer03 = []
+
+        rooms = []
         for m_x in range(max_x):
             for m_y in range(max_y):
                 if current_map[m_y][m_x]["value"] == 0:
@@ -105,21 +92,17 @@ class Generator():
                         if r_id not in rooms:
                             rooms.append(r_id)
                             break
+
                     index_used = []
-                    stack = []
                     while len(index_used) < len(rotated_room_points):
-                        start3 = time.perf_counter()
-                        #buffer_map = copy.deepcopy(current_map)
-                        #buffer_map = cPickle.loads(cPickle.dumps(current_map, -1))
                         buffer_map = [x[:] for x in current_map] # 
-                        end3 = time.perf_counter()
-                        timer03.append(end3 - start3)
                         while True:
                             index = random.choice(range(len(rotated_room_points)))
                             if index not in index_used:
                                 current_room = rotated_room_points[index]
                                 index_used.append(index)
                                 break
+
                         valid_room = True
                         for x, y, value in current_room:
                             if not m_x + x >= max_x and not m_y + y >= max_y:
@@ -136,22 +119,15 @@ class Generator():
                         if valid_room:
                             current_map = new_map = [x[:] for x in buffer_map]
                             break
-
-        end = time.perf_counter()
-        print("I  ) Time Elapsed for copying to buffer_map: " + str(sum(timer03)))
-        print("II ) Time Elapsed for empty map algorithm: " + str(end - start))
         return current_map
 
     def dijkstras_algorithm(self, current_map):
-        start = time.perf_counter()
         g = Graph()
         unvisited = []
-        cell_dict = {}
         for y in range(len(current_map)):
             for x in range(len(current_map[y])):
                 item = current_map[y][x]
                 unvisited.append(item["cell_name"])
-                cell_dict[item["cell_name"]] = item
                 # Up
                 if y != 0:
                     neighbor = current_map[y - 1][x]
@@ -192,12 +168,7 @@ class Generator():
                         dist < shortest_distance[neighbor]):
                     shortest_distance[neighbor] = dist
                     path[neighbor] = min_node
-        end = time.perf_counter()
-        print("IV ) Elapsed Time for Dijkstras Algorithm: " + str(end - start))
-        for row in current_map:
-            print(row)
-        # print(visited)
-
+        return current_map
 
 
 class Graph:
@@ -218,5 +189,5 @@ class Graph:
         self.weight[(to_node["cell_name"], from_node["cell_name"])] = weight
 
 
-g = Generator()
-g.create_map()
+# g = Generator()
+# g.create_map()
