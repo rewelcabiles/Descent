@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint
 from flask_login import current_user
 from Descent import socketio
-from Descent.server_utils import Server
+from Descent.game.server_utils import Server
 from Descent.users.models import User
 
 server = Server()
