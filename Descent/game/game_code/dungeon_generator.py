@@ -3,6 +3,8 @@ import random
 import copy
 import collections
 import time
+import _pickle as cPickle
+
 rooms = [
     [
         [1, 1, 1, 1],
@@ -33,7 +35,6 @@ def rotate_matrix_clockwise(original):
     new = list(zip(*original[::-1]))
     return new
 
-
 rotated_room_points = []
 for room in rooms:
     i = 0
@@ -45,6 +46,7 @@ for room in rooms:
         rotated_room_points.append(room_points)
         room = rotate_matrix_clockwise(room)
         i += 1
+end = time.perf_counter()
 
 
 class Dungeon():
@@ -67,14 +69,18 @@ class Generator():
         pass
 
     def create_map(self):
+        print("===========================")
+        print("== Using StackOF answer  ==")
+        mapstart = time.perf_counter()
         current_map = self.create_floor()
         self.dijkstras_algorithm(current_map)
+        mapend = time.perf_counter()
+        print("V  ) Total Dungeon Creation Time Elapsed: "+str(mapend-mapstart))
 
     def create_floor(self):
-        print("Create Floor time elapsed =====")
         start = time.perf_counter()
         # Define Floor Parameters
-        max_x, max_y = 36, 36
+        max_x, max_y = 48, 48
         rooms = []
         # Create Empty Floor Map
         current_map = [[0] * max_x for _ in range(max_y)]
@@ -100,9 +106,12 @@ class Generator():
                             rooms.append(r_id)
                             break
                     index_used = []
+                    stack = []
                     while len(index_used) < len(rotated_room_points):
                         start3 = time.perf_counter()
-                        buffer_map = copy.deepcopy(current_map)
+                        #buffer_map = copy.deepcopy(current_map)
+                        #buffer_map = cPickle.loads(cPickle.dumps(current_map, -1))
+                        buffer_map = [x[:] for x in current_map] # 
                         end3 = time.perf_counter()
                         timer03.append(end3 - start3)
                         while True:
@@ -125,15 +134,15 @@ class Generator():
                                 valid_room = False
                                 break
                         if valid_room:
-                            current_map = copy.deepcopy(buffer_map)
+                            current_map = new_map = [x[:] for x in buffer_map]
                             break
-        print("Time Elapsed for START03: " + str(sum(timer03)))
+
         end = time.perf_counter()
-        print("Time Elapsed for Algorithm: " + str(end - start))
+        print("I  ) Time Elapsed for copying to buffer_map: " + str(sum(timer03)))
+        print("II ) Time Elapsed for empty map algorithm: " + str(end - start))
         return current_map
 
     def dijkstras_algorithm(self, current_map):
-        print("Dijkstras_algorithm time elapsed ==========")
         start = time.perf_counter()
         g = Graph()
         unvisited = []
@@ -184,8 +193,11 @@ class Generator():
                     shortest_distance[neighbor] = dist
                     path[neighbor] = min_node
         end = time.perf_counter()
-        print("Elapsed Time: " + str(end - start))
+        print("IV ) Elapsed Time for Dijkstras Algorithm: " + str(end - start))
+        for row in current_map:
+            print(row)
         # print(visited)
+
 
 
 class Graph:

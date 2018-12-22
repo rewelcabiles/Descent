@@ -3,3 +3,5 @@ __pycache__/*
 __pycache__
 env/
 *.egg-info
+Descent/game/game_code/output.txt
+Descent/game/game_code/map.txt
