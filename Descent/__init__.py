@@ -2,11 +2,14 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_socketio import SocketIO
 import os
 
 sql_uri = 'mysql+pymysql://root:@localhost/descent'
 
 app = Flask(__name__)
+socketio = SocketIO(app)
+
 app.config["SECRET_KEY"] = 'f5418130a27f18abe557d61201c31d60'
 app.config['SQLALCHEMY_DATABASE_URI'] = sql_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -28,7 +31,6 @@ from Descent.resources.routes import resources
 
 
 app.register_blueprint(users, url_prefix="/account")
-app.register_blueprint(game, url_prefix="/game")
+app.register_blueprint(game, url_prefix="/Descent")
 app.register_blueprint(site, url_prefix="/")
 app.register_blueprint(resources)
-
