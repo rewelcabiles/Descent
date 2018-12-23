@@ -12,6 +12,7 @@ class State:
     def update(self):
         pass
 
+
 class StateList:
     def __init__(self):
         self.state_list=[]
@@ -24,6 +25,7 @@ class StateList:
 
     def top(self):
         return self.state_list[-1]
+
 
 class Game:
     def __init__(self):

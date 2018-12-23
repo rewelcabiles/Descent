@@ -7,12 +7,10 @@ socket.on('connect', function() {
 
 var Game = {
     // Canvas to draw on
-    canvas_width:   640,
-    canvas_height:  480,
+    canvas_width:   $(document).width(),
+    canvas_height:  $(document).height(),
     canvasElement:  null,
     canvas :        null,
-
-
 
     // The game loop
     FPS: 30,
@@ -98,7 +96,7 @@ window.onload = function () {
 var main_loop = function () {
 
     // update all values
-    //Game.update()
+    Game.update()
 
     // draw on the canvas.
     
