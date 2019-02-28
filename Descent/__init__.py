@@ -5,7 +5,11 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 import os
 
-sql_uri = 'mysql+pymysql://root:@localhost/descent'
+with open('Descent/dbacc.ini') as f:
+    lines = f.readlines()
+lines = [x.strip() for x in lines] 
+
+sql_uri = 'mysql+pymysql://'+lines[0]+':'+lines[1]+'@localhost/Descent'
 
 app = Flask(__name__)
 socketio = SocketIO(app)

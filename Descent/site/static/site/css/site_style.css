@@ -4,6 +4,13 @@
 	background-color: white;
   	box-shadow: 10px 10px 5px black;
 }
+.header_box{
+	padding-left:10px;
+	padding-right:10px;
+	background-color: white;
+  	box-shadow: 10px 10px 5px black;
+  	width: 100%;
+}
 .box_title{
 	height:20%;
 }

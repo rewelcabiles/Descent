@@ -5,3 +5,4 @@ env/
 *.egg-info
 Descent/game/game_code/output.txt
 Descent/game/game_code/map.txt
+dbacc.ini
