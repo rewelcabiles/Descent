@@ -1,6 +1,6 @@
 
 
-class User:
+class Connection:
     def __init__(self, user=None):
         self.user = user
 
@@ -37,5 +37,6 @@ class Server:
         self.connection_list = []
 
     def new_connection(self, user):
-        new_user = User(user)
-        self.connection_list.append(new_user)
+        connection = Connection(user)
+        self.connection_list.append(connection)
+        print(connection.user.username)

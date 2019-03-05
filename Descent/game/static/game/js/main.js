@@ -1,15 +1,21 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-
+var username = ""
+var user_id = null
 socket.on('connect', function() {
-    
+    socket.emit('sync users', {data: 'Client Connection'});
 });
 
+socket.on('initial_user_info', function(data) {
+    username = data["username"];
+    user_id  = data["user_id"];
+});
 
 var Game = {
     // Canvas to draw on
     canvas_width:   $(document).width(),
     canvas_height:  $(document).height(),
     canvasElement:  null,
+    uiLayer:        null,
     canvas :        null,
 
     // The game loop
@@ -18,16 +24,16 @@ var Game = {
     timerID: null, // interval
 
 
-    gameMode: new StateStack(),
+    state_stack: new StateStack(),
 
     update: function () {
-        this.gameMode.update();
-        this.gameMode.render();
+        this.state_stack.update();
+        this.state_stack.render();
     },
 
 
     startGame: function() {
-        this.gameMode.push(new MainMenuState());
+        this.state_stack.push(new state_mainmenu());
         this.timerID = setInterval(this.update.bind(this),this.timer);
 
     },
@@ -47,8 +53,14 @@ var Game = {
         this.canvasElement = document.createElement("canvas");
         this.canvasElement.width = this.canvas_width;
         this.canvasElement.height = this.canvas_height;
+        
         this.canvas = this.canvasElement.getContext("2d");
 
+        this.uiLayer = document.createElement('div');
+        this.uiLayer.width = this.canvas_width;
+        this.uiLayer.height = this.canvas_height;
+        this.uiLayer.className += ' uiLayer';
+        wrapper.appendChild(this.uiLayer);
         wrapper.appendChild(this.canvasElement);
     },
 
@@ -62,7 +74,7 @@ var Game = {
 
 window.onload = function () {
     window.getGameInstance = function () {
-        return Game.gameMode;
+        return Game.state_stack;
     };
 
     window.getCanvas = function (){
@@ -77,13 +89,13 @@ window.onload = function () {
     };
 
     window.pauseGame = function (){
-        Game.gameMode.pause();
+        Game.state_stack.pause();
         Game.pauseGame();
     };
 
     window.resumeGame = function () {
         Game.resumeGame();
-        Game.gameMode.resume();
+        Game.state_stack.resume();
     };
 
     window.getCanvasElement = function (){

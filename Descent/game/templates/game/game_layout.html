@@ -10,7 +10,10 @@
     <!-- Bootstrap and Other Style Sheets-->
     <link href="{{ url_for('resources.static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('resources.static', filename='css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('resources.static', filename='jquery-ui/jquery-ui.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('game.static', filename='css/game_style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('game.static', filename='css/main_menu.css') }}" rel="stylesheet">
+    
     <!-- Custom Style Sheets-->
     {% block head %} {% endblock %}
   </head>
@@ -22,6 +25,8 @@
   {% block foot %} {% endblock %}
   <script src="{{ url_for('resources.static', filename='js/jquery-3.3.1.min.js') }}"></script>
   <script src="{{ url_for('resources.static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('resources.static', filename='jquery-ui/external/jquery/jquery.js') }}"></script>
+  <script src="{{ url_for('resources.static', filename='jquery-ui/jquery-ui.min.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/socket.io.slim.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/setup.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/main.js') }}"></script>

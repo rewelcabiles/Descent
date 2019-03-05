@@ -12,11 +12,12 @@ game = Blueprint(
     static_folder="static/game")
 
 
-# @socketio.on('connect')
-# def connect(arg1):
-#     if not current_user.is_anonymous():
-#         user = User.query.filter_by(user_id=current_user.get_id()).first()
-#         server.new_connection(user)
+@socketio.on('sync users')
+def sync_users(packet):
+    if not current_user.is_anonymous:
+        user = User.query.filter_by(user_id=current_user.get_id()).first()
+        server.new_connection(user)
+        socketio.emit('initial_user_info', {'username': user.username, 'id':user.user_id})
 
 
 @game.route("/", methods=["GET"])

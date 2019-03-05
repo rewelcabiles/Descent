@@ -1,0 +1,18 @@
+.uiLayer{
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	color:yellow;
+	z-index: 2;
+}
+
+.canvasLayer{
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	z-index: 1;
+}
+
+html{
+	overflow: hidden;
+}
