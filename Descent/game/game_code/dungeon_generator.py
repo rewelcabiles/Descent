@@ -4,27 +4,25 @@ import copy
 import collections
 import time
 import _pickle as cPickle
+import Descent.game.game_code.factory as factory
 
 rooms = [
     [
-        [1, 1, 1, 1],
-        [1, 2, 2, 1],
-        [1, 2, 2, 1],
-        [1, 1, 1, 1]
+        [1, 1, 1, 1, 1],
+        [1, 2, 2, 2, 1],
+        [1, 2, 2, 2, 1],
+        [1, 2, 2, 2, 1],
+        [1, 1, 1, 1, 1]
     ],
     [
-        [1, 1, 1],
-        [1, 2, 1],
-        [1, 1, 1]
-    ],
-    [
-        [1, 1, 1, 1],
-        [1, 2, 1, 1],
-        [1, 2, 2, 1],
-        [1, 1, 1, 1]
+        [1, 1, 1, 1, 1],
+        [1, 2, 2, 2, 1],
+        [1, 2, 2, 2, 1],
+        [1, 1, 1, 1, 1]
     ],
     [
         [1, 1, 1, 1],
+        [1, 2, 2, 1],
         [1, 2, 2, 1],
         [1, 1, 1, 1]
     ]
@@ -48,27 +46,25 @@ for room in rooms:
         i += 1
 
 
-class Dungeon():
-    def __init__(self):
-        self.id = None
-        self.floors = []
-        self.floor_num = 0
-
-
-
-
 class Generator():
-    def __init__(self):
-        pass
+    def __init__(self, world):
+        self.world = world
+        self.factory = factory.Factory()
 
     def create_map(self):
         mapstart = time.perf_counter()
         current_map = self.create_floor()
         current_map = self.dijkstras_algorithm(current_map)
-        return current_map
+
+        for y in range(len(current_map)):
+            for x in range(len(current_map[y])):
+
+                self.factory.create_tiles(self.world, current_map[y][x], x, y)
+        
+        
 
     def create_floor(self):
-        max_x, max_y = 48, 48
+        max_x, max_y = 30, 25
         current_map = [[0] * max_x for _ in range(max_y)]
 
         cell_name = 100
@@ -119,15 +115,18 @@ class Generator():
                         if valid_room:
                             current_map = new_map = [x[:] for x in buffer_map]
                             break
+
         return current_map
 
     def dijkstras_algorithm(self, current_map):
         g = Graph()
         unvisited = []
+        cell_dict = {}
         for y in range(len(current_map)):
             for x in range(len(current_map[y])):
                 item = current_map[y][x]
                 unvisited.append(item["cell_name"])
+                cell_dict[item["cell_name"]] = item
                 # Up
                 if y != 0:
                     neighbor = current_map[y - 1][x]
@@ -146,10 +145,13 @@ class Generator():
                     g.add_edge(item, neighbor)
 
         current = unvisited[random.choice(range(len(unvisited)))]
+        print("FIRST NODE")
+        print(str(current)+"---\n")
         shortest_distance = {name: 999999 for name in unvisited}
         shortest_distance[current] = 0
         path = {}
         visited = []
+        vist = []
         while unvisited:
             min_node = None
             for node in unvisited:
@@ -157,17 +159,40 @@ class Generator():
                     min_node = node
                 elif shortest_distance[node] < shortest_distance[min_node]:
                     min_node = node
-
-            if min_node is None:
-                break
-            unvisited.remove(min_node)
-            visited.append(min_node)
             for neighbor in g.edges[min_node]:
                 dist = shortest_distance[min_node] + g.weight[(min_node, neighbor)]
                 if (shortest_distance[neighbor] is None or
                         dist < shortest_distance[neighbor]):
                     shortest_distance[neighbor] = dist
                     path[neighbor] = min_node
+                    vist.append(min_node)
+            unvisited.remove(min_node)
+
+        start = 0
+        goal = 0
+
+        while start >= goal:
+            start= random.randint(0, len(vist))
+            goal = random.randint(20, len(vist))
+
+        goal = vist[goal]
+        start = vist[start]
+
+        while goal != start:
+            try:
+                visited.insert(0, goal)
+                goal = path[goal]
+            except KeyError:
+                print("Path Not Found")
+                break
+
+        print(visited)
+            
+            
+        for nodes in visited:
+            cell_dict[nodes]["value"] = 100
+            #print(cell_dict[nodes]["room_id"])
+
         return current_map
 
 

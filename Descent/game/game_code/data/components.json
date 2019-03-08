@@ -1,0 +1,17 @@
+ {
+	"mask" : {},
+	
+	"position":{
+		"x": 0,
+		"y": 0
+	},
+
+	"image":{
+		"file_name": "NONE.png"
+	},
+	"room":{
+		"tiles":[],
+		"center":0
+	}
+}
+
