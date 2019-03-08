@@ -1,42 +1,32 @@
-
+from Descent.game.game_code import world, dungeon_generator
+import time
 
 class Connection:
-    def __init__(self, user=None):
+    def __init__(self, game, user=None):
         self.user = user
+        self.game = game
 
 
-class State:
-    def __init__(self, name):
-        self.name = name
+class Game:
+    def __init__(self):
+        self.world = world.World()
+        self.generator  = dungeon_generator.Generator(self.world)
+        self.generator.create_map()
+
+    def send_initial_data(self):
+        pass
 
     def update(self):
         pass
 
 
-class StateList:
-    def __init__(self):
-        self.state_list=[]
-
-    def pop(self):
-        return self.state_list.pop()
-
-    def push(self, state):
-        self.state_list.append(state)
-
-    def top(self):
-        return self.state_list[-1]
-
-
-class Game:
-    def __init__(self):
-        self.State
-
-
 class Server:
     def __init__(self):
-        self.connection_list = []
+        self.connection_list = {}
 
     def new_connection(self, user):
-        connection = Connection(user)
-        self.connection_list.append(connection)
-        print(connection.user.username)
+        connection = Connection(Game(), user)
+        self.connection_list[str(user.user_id)] = connection
+
+    def get_connection(self, user_id):
+        return self.connection_list[str(user_id)]
