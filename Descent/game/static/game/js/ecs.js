@@ -25,7 +25,7 @@ var ECS_Systems = function() {
 
 	}
 
-	this.render = function(canvas) {
+	this.render = function(canvas, camera) {
 		//Components needed for this to render
 
 		component_list = ["position", "image"];
@@ -34,13 +34,13 @@ var ECS_Systems = function() {
 
 		for (entity_id in this.world["mask"]){
 			if(this.has_components(entity_id, component_list)){
-
 				image_name = this.world["image"][entity_id]["file_name"]
 				position   = this.world["position"][entity_id]
 				img = new Image();
 				img.src = "game/images/"+image_name;
-
-				canvas.drawImage(img, position["x"] * sprite_sizes, position["y"]* sprite_sizes);
+				img_x = position["x"] * sprite_sizes - camera.camera_x;
+				img_y = position["y"] * sprite_sizes - camera.camera_y;
+				canvas.drawImage(img, img_x, img_y);
 			}
 		}
 

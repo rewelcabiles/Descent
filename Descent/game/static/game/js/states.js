@@ -91,14 +91,15 @@ var state_mainmenu = function () {
 var state_game = function() {
     this.name = "state_game"; // Just to identify the State
     this.world = {};
-    console.log("___1");
-    this.systems = new ECS_Systems();
+
     var received_data = false;
     var self = this;
-
     var canvas = getCanvas(),
         dimensions = getGameDimensions(),
         backgroundColor = "#000"
+
+    this.systems = new ECS_Systems();
+    this.camera  = new Camera(dimensions);
 
     this.update  = function (){
         if(received_data == true){
@@ -107,28 +108,21 @@ var state_game = function() {
             canvas.fillStyle = backgroundColor;
             canvas.fillColor = backgroundColor;
             canvas.fillRect(0,0,dimensions.width,dimensions.height);
-            this.systems.render(canvas);    
+            this.systems.render(canvas, this.camera);    
         }
     };
 
-    this.render  = function (){
-        
-    };
     this.onEnter = function (){
-        console.log("state_game started");
         socket.emit('mm_new_game');
         socket.on('get_world_data', function(data) {
             self.world = JSON.parse(data["world_data"]);
             self.systems.set_data(self.world, JSON.parse(data["component_data"]));
-
-            
             received_data = true;
         });
     };
-
+    
+    this.render  = function (){};
     this.onExit  = function (){};
-
-    // Optional but useful
     this.onPause = function (){};
     this.onResume= function (){};
 };
