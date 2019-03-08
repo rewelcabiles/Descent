@@ -16,8 +16,8 @@ var state_mainmenu = function () {
         }
         colorsArray = values;
 
-        var wrapper_menu  = document.createElement("div");
-        wrapper_menu.className += "mm_menu_wrapper";
+        this.ui_state_layer  = document.createElement("div");
+        this.ui_state_layer.className += "mm_menu_wrapper";
 
         var btn_group  = document.createElement("div");
         btn_group.className += "btn-group-vertical";
@@ -26,7 +26,14 @@ var state_mainmenu = function () {
         btn_startgame.innerHTML  = "Start Game";
         btn_startgame.className = "btn btn-outline-danger";
         btn_startgame.width = "200px";
+        btn_startgame.id = "mm_start_game";
+        btn_startgame.onclick = function(){
+            console.log("START GAME");
+            Game.state_stack.pop()
+            Game.state_stack.push(new state_game());
 
+        };
+        console.log("mm loaded");
         var btn_loadgame = document.createElement("button");
         btn_loadgame.innerHTML  = "Load Game";
         btn_loadgame.className = "btn btn-outline-danger mt-4";
@@ -35,8 +42,8 @@ var state_mainmenu = function () {
         btn_group.appendChild(btn_startgame);
         btn_group.appendChild(btn_loadgame);
         
-        wrapper_menu.appendChild(btn_group);
-        Game.uiLayer.appendChild(wrapper_menu);
+        this.ui_state_layer.appendChild(btn_group);
+        Game.uiLayer.appendChild(this.ui_state_layer);
 
 
     };
@@ -44,6 +51,12 @@ var state_mainmenu = function () {
     this.onExit  = function(){
         // clear the keydown event
         window.onkeydown = null;
+        canvas.clearRect(0,0,dimensions.width,dimensions.height)
+        canvas.beginPath();
+        canvas.fillStyle = backgroundColor;
+        canvas.fillColor = backgroundColor;
+        canvas.fillRect(0,0,dimensions.width,dimensions.height);
+        this.ui_state_layer.parentNode.removeChild(this.ui_state_layer)
     };
 
     this.update = function (){
@@ -75,15 +88,48 @@ var state_mainmenu = function () {
     };
 };
 
-
 var state_game = function() {
     this.name = "state_game"; // Just to identify the State
-    this.update  = function (){};
-    this.render  = function (){};
-    this.onEnter = function (){};
+    this.world = {};
+    console.log("___1");
+    this.systems = new ECS_Systems();
+    var received_data = false;
+    var self = this;
+
+    var canvas = getCanvas(),
+        dimensions = getGameDimensions(),
+        backgroundColor = "#000"
+
+    this.update  = function (){
+        if(received_data == true){
+            canvas.clearRect(0,0,dimensions.width,dimensions.height)
+            canvas.beginPath();
+            canvas.fillStyle = backgroundColor;
+            canvas.fillColor = backgroundColor;
+            canvas.fillRect(0,0,dimensions.width,dimensions.height);
+            this.systems.render(canvas);    
+        }
+    };
+
+    this.render  = function (){
+        
+    };
+    this.onEnter = function (){
+        console.log("state_game started");
+        socket.emit('mm_new_game');
+        socket.on('get_world_data', function(data) {
+            self.world = JSON.parse(data["world_data"]);
+            self.systems.set_data(self.world, JSON.parse(data["component_data"]));
+
+            
+            received_data = true;
+        });
+    };
+
     this.onExit  = function (){};
 
     // Optional but useful
     this.onPause = function (){};
     this.onResume= function (){};
 };
+
