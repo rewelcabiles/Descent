@@ -98,8 +98,11 @@ var state_game = function() {
         dimensions = getGameDimensions(),
         backgroundColor = "#000"
 
-    this.systems = new ECS_Systems();
+    this.asset_manager = new AssetManager()
+    this.asset_manager.preload_assets()
+    this.systems = new ECS_Systems(this);
     this.camera  = new Camera(dimensions);
+    
 
     this.update  = function (){
         if(received_data == true){
@@ -109,6 +112,7 @@ var state_game = function() {
             canvas.fillColor = backgroundColor;
             canvas.fillRect(0,0,dimensions.width,dimensions.height);
             this.systems.render(canvas, this.camera);    
+            this.systems.handle_user_input(this.camera);
         }
     };
 
@@ -120,7 +124,7 @@ var state_game = function() {
             received_data = true;
         });
     };
-    
+
     this.render  = function (){};
     this.onExit  = function (){};
     this.onPause = function (){};
