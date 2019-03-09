@@ -64,7 +64,7 @@ class Generator():
         
 
     def create_floor(self):
-        max_x, max_y = 30, 25
+        max_x, max_y = 32, 19
         current_map = [[0] * max_x for _ in range(max_y)]
 
         cell_name = 100
@@ -73,7 +73,7 @@ class Generator():
                 current_map[y][x] = {
                     "room_id": 0,
                     "value": 0,
-                    "weight": 0,
+                    "weight": 999999,
                     "cell_name": cell_name
                 }
                 cell_name += 1
@@ -105,7 +105,10 @@ class Generator():
                                 if buffer_map[m_y + y][m_x + x]['value'] == 0:
                                     buffer_map[m_y + y][m_x + x]["room_id"] = r_id
                                     buffer_map[m_y + y][m_x + x]["value"] = value
-                                    buffer_map[m_y + y][m_x + x]["weight"] = r_id
+                                    if value == 1:
+                                        buffer_map[m_y + y][m_x + x]["weight"] = r_id+900
+                                    else:
+                                        buffer_map[m_y + y][m_x + x]["weight"] = r_id
                                 else:
                                     valid_room = False
                                     break
@@ -144,9 +147,11 @@ class Generator():
                     neighbor = current_map[y][x - 1]
                     g.add_edge(item, neighbor)
 
-        current = unvisited[random.choice(range(len(unvisited)))]
-        print("FIRST NODE")
-        print(str(current)+"---\n")
+        while True:
+            current = unvisited[random.choice(range(len(unvisited)))]
+            if cell_dict[current]["value"] == 2:
+                break
+
         shortest_distance = {name: 999999 for name in unvisited}
         shortest_distance[current] = 0
         path = {}
@@ -170,13 +175,23 @@ class Generator():
 
         start = 0
         goal = 0
-
-        while start >= goal:
+        
+        while (start - goal) * 1 < 20:
             start= random.randint(0, len(vist))
-            goal = random.randint(20, len(vist))
+            
 
-        goal = vist[goal]
-        start = vist[start]
+
+        while True:
+            goal = random.randint(20, len(vist))
+            goal = vist[goal]
+            if cell_dict[vist[goal]]["value"] == 2:
+                break
+        while True:
+            start = random.randint(20, len(vist))
+            start = vist[start]
+            if cell_dict[vist[start]]["value"] == 2:
+                break
+        
 
         while goal != start:
             try:
@@ -190,6 +205,7 @@ class Generator():
             
             
         for nodes in visited:
+            pass
             cell_dict[nodes]["value"] = 100
             #print(cell_dict[nodes]["room_id"])
 
@@ -203,10 +219,8 @@ class Graph:
         self.weight = {}
 
     def add_edge(self, from_node, to_node):
-        if to_node["room_id"] == from_node["room_id"]:
-            weight = 0
-        else:
-            weight = to_node["weight"]
+        
+        weight = to_node["weight"]
 
         self.edges[from_node["cell_name"]].append(to_node["cell_name"])
         self.edges[to_node["cell_name"]].append(from_node["cell_name"])
