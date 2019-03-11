@@ -4,15 +4,15 @@ import copy
 import collections
 import time
 import _pickle as cPickle
-import Descent.game.game_code.factory as factory
+#import Descent.game.game_code.factory as factory
 
 rooms = [
     [
-        [1, 1, 1, 1, 1],
+        [1, 1, 3, 1, 1],
         [1, 2, 2, 2, 1],
+        [3, 2, 2, 2, 3],
         [1, 2, 2, 2, 1],
-        [1, 2, 2, 2, 1],
-        [1, 1, 1, 1, 1]
+        [1, 1, 3, 1, 1]
     ],
     [
         [1, 1, 1, 1, 1],
@@ -27,6 +27,75 @@ rooms = [
         [1, 1, 1, 1]
     ]
 ]
+
+
+class Division():
+    def __init__(self):
+        pass
+
+    def add_perimiter(self, map_):
+        for x, y, v in map_:
+            max_x = [x for x, y, v in map_]
+            max_x.sort()
+            max_y = [y for x, y, v in map_]
+            max_y.sort()
+
+            if y == 0:
+                map_[map_.index((x, y, v))] = (x, y, 1)
+            elif x == 0:
+                map_[map_.index((x, y, v))] = (x, y, 1)
+            elif x == max_x[-1]:
+                map_[map_.index((x, y, v))] = (x, y, 1)                
+
+            elif y == max_y[-1]:
+                map_[map_.index((x, y, v))] = (x, y, 1)
+        return map_
+
+    def divide(self, start):
+        start = self.add_perimiter(start)
+        subdivisions = []
+        finished     = []
+        minimum_tiles= 6
+        subdivisions.append(start)
+        while len(subdivisions) > 0:
+            current_sub = random.choice(subdivisions)
+            sub1 = []
+            sub2 = []
+            if random.choice(['v','h']) == 'v': 
+                choice = random.choice([x for x, y, v in current_sub])                
+                for x, y, v in current_sub:
+                    if x == choice:
+                        current_sub[current_sub.index((x, y, v))] = (x, y, 1)
+                    if x < choice:
+                        sub1.append((x, y, z))
+                    elif x > choice:
+                        sub2.append((x, y, z))
+            else:
+                choice = random.choice([y for x, y, v in current_sub])                
+                for x, y, v in current_sub:
+                    if y == choice:
+                        current_sub[current_sub.index((x, y, v))] = (x, y, 1)
+                    if y < choice:
+                        sub1.append((x, y, z))
+                    elif y > choice:
+                        sub2.append((x, y, z))
+
+            sub1 = self.add_perimiter(sub1)
+            sub2 = self.add_perimiter(sub2)
+
+            subdivisions.append(sub1)
+            subdivisions.append(sub2)
+
+
+            if len(current_sub) / 2 < minimum_tiles:
+                finished.append(current_sub)
+                subdivisions.remove(current_sub)
+
+
+
+
+
+
 
 
 def rotate_matrix_clockwise(original):
