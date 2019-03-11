@@ -33,6 +33,13 @@ class Division():
     def __init__(self):
         pass
 
+    def create_blank_map(self, max_x, max_y):
+        temp_map = []
+        for x in range(max_x):
+            for y in range(map_y):
+                temp_map.append(x, y, 0)
+        return temp_map
+
     def add_perimiter(self, map_):
         for x, y, v in map_:
             max_x = [x for x, y, v in map_]
