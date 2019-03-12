@@ -1,6 +1,7 @@
 var Camera = function(dimensions){
-	this.camera_x = 25;
-	this.camera_y = 250;
+	this.camera_x = 0;
+	this.camera_y = 0;
+	this.scale = 0.60;
 	this.viewport_width  = dimensions.width;
 	this.viewport_height = dimensions.height;
 	this.viewport_center = {"x":this.viewport_height / 2, "y":this.viewport_width / 2}

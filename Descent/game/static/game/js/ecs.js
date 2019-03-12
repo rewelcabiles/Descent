@@ -32,7 +32,7 @@ var ECS_Systems = function(state) {
 
 		component_list = ["position", "image"];
 		this.world
-		sprite_sizes = 64;
+		sprite_sizes = 64*camera.scale;
 
 		for (entity_id in this.world["mask"]){
 			if(this.has_components(entity_id, component_list)){
@@ -41,7 +41,7 @@ var ECS_Systems = function(state) {
 				img = this.state.asset_manager.get_asset(image_name);
 				img_x = (position["x"] * sprite_sizes) - camera.camera_x;
 				img_y = (position["y"] * sprite_sizes )- camera.camera_y;
-				canvas.drawImage(img, img_x, img_y);
+				canvas.drawImage(img, img_x, img_y, sprite_sizes, sprite_sizes);
 
 			}
 		}
