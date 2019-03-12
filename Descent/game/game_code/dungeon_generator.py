@@ -81,7 +81,7 @@ class Division():
                     remain_stack.append(new_node)
             remain_stack.remove(node)
         for tiles in self.new_map:
-            self.factory.create_tiles_2(self.world, tiles)
+            self.factory.create_tiles(self.world, tiles)
 
 
 def rotate_matrix_clockwise(original):
