@@ -10,8 +10,8 @@ class Connection:
 class Game:
     def __init__(self):
         self.world = world.World()
-        self.generator  = dungeon_generator.Generator(self.world)
-        self.generator.create_map()
+        self.generator  = dungeon_generator.Division(self.world)
+        self.generator.division()
 
     def send_initial_data(self):
         pass
