@@ -12,8 +12,6 @@ var AssetManager = function(){
 		for (items in assets){
 			this.resources[assets[items]] = new Image();
 			this.resources[assets[items]].src = "game/resources/images/"+assets[items];
-			
-			console.log(this.resources[assets[items]])
 		}
 	}
 
