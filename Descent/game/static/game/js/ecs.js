@@ -27,9 +27,15 @@ var ECS_Systems = function(state) {
 	}
 
 	this.cart_to_iso = function(cart_x, cart_y){
-		iso_x = cart_x/2 - cart_y/2;
-		iso_y = (cart_x/2 + cart_y/2) / 2;
+		iso_x = cart_x - cart_y;
+		iso_y = (cart_x + cart_y) / 2;
 		return [iso_x, iso_y]
+	}
+
+	this.iso_to_cart = function(iso_x, iso_y){
+		cart_x = (2 * iso_y + iso_x) / 2;
+		cart_y = (2 * iso_y - iso_x) / 2;
+		return [cart_x, cart_y]
 	}
 
 	this.update_z_layer = function(){
@@ -48,6 +54,16 @@ var ECS_Systems = function(state) {
 	    return (self.world["position"][a]['x'] - self.world["position"][b]['x']) || (self.world["position"][a]['y'] - self.world["position"][b]['y']);
 	}
 	
+	this.camera_follow = function(world, camera){
+		if (camera.follow_target_id != null){
+			target_x = world["position"][camera.follow_target_id]["x"];
+			target_y = world["position"][camera.follow_target_id]["y"];
+			new_pos = this.cart_to_iso(target_x, target_y)
+			camera.camera_x = new_pos[0]*128*camera.scale-camera.viewport_width/2;
+			camera.camera_y = new_pos[1]*128*camera.scale-camera.viewport_height/2;
+
+		}
+	}
 
 	this.render = function(canvas, camera) {
 		//Components needed for this to render
@@ -60,15 +76,19 @@ var ECS_Systems = function(state) {
 			image_name = this.world["image"][entity_id]["file_name"]
 			position   = this.world["position"][entity_id]
 			img = this.state.asset_manager.get_asset(image_name);
-			img_x = (position["x"] * sprite_sizes_x) - camera.camera_x;
-			img_y = (position["y"] * sprite_sizes_y) - camera.camera_y;
+			img_x = (position["x"]);
+			img_y = (position["y"]);
 			var iso_pos = this.cart_to_iso(img_x, img_y)
-			canvas.drawImage(img, iso_pos[0], iso_pos[1], sprite_sizes_x, sprite_sizes_y);
+			canvas.drawImage(img,
+				iso_pos[0] * sprite_sizes_x - camera.camera_x ,
+				iso_pos[1] * sprite_sizes_y - camera.camera_y,
+				sprite_sizes_x,
+				sprite_sizes_y);
 		}
 		
 	}
 
-	this.handle_user_input = function(camera) {
+	this.handle_user_input = function(canvas, camera) {
 		$(document.body).on('keydown', function(e){
 			switch (e.which){
 				case 37:
@@ -85,5 +105,18 @@ var ECS_Systems = function(state) {
 					break
 			}
 		});
+		$(document.body).on('mousedown', function(e){
+			var pos = getCursorPosition(canvas, e);
+			var test = self.iso_to_cart(pos["x"], pos["y"]);
+			console.log(test[0]+", "+test[1])
+		});
 	}
+
+}
+function getCursorPosition(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    console.log("x: " + x + " y: " + y);
+    return {"x":x, "y":y}
 }
