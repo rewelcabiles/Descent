@@ -112,7 +112,8 @@ var state_game = function() {
             canvas.fillColor = backgroundColor;
             canvas.fillRect(0,0,dimensions.width,dimensions.height);
             this.systems.render(canvas, this.camera);    
-            this.systems.handle_user_input(this.camera);
+            this.systems.handle_user_input(getCanvasElement(), this.camera);
+            this.systems.camera_follow(this.world, this.camera);
         }
     };
 
@@ -121,6 +122,8 @@ var state_game = function() {
         socket.on('get_world_data', function(data) {
             self.world = JSON.parse(data["world_data"]);
             self.systems.set_data(self.world, JSON.parse(data["component_data"]));
+            self.player_id = data["player_id"];
+            self.camera.set_target(self.player_id)
             received_data = true;
         });
     };

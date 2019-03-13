@@ -1,5 +1,4 @@
-from Descent.game.game_code import world, dungeon_generator
-import time
+from Descent.game.game_code import world, dungeon_generator, systems
 
 class Connection:
     def __init__(self, game, user=None):
@@ -10,8 +9,11 @@ class Connection:
 class Game:
     def __init__(self):
         self.world = world.World()
+        self.systems = systems.Systems(self.world)
         self.generator  = dungeon_generator.Division(self.world)
         self.generator.division()
+        self.player_id = self.systems.add_player()
+
 
     def send_initial_data(self):
         pass

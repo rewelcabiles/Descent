@@ -27,7 +27,8 @@ def send_world_data():
 	connection = server.get_connection(current_user.get_id())
 	socketio.emit("get_world_data", {
 		"world_data": connection.game.world.get_world_as_json(),
-		"component_data": connection.game.world.get_components_as_json()
+		"component_data": connection.game.world.get_components_as_json(),
+		"player_id": connection.game.player_id
 		})
 
 @game.route("/", methods=["GET"])
