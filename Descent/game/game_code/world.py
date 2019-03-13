@@ -1,6 +1,6 @@
 import json
 import random
-
+import Descent.game.game_code.factory as factory
 
 
 
@@ -20,6 +20,7 @@ class World():
 			iterator += 1
 		
 		self.entity_id_max = 9000
+		self.factory = factory.Factory(self)
 
 	def assign_entity_id(self):
 		while True:
