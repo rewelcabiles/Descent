@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 import random
-import Descent.game.game_code.factory as factory
 
 
 class Division():
     def __init__(self, world):
         self.world = world
-        self.factory = factory.Factory()
-
 
     def create_blank_map(self, max_x, max_y):
         temp_map = []
@@ -81,22 +78,6 @@ class Division():
                     remain_stack.append(new_node)
             remain_stack.remove(node)
         for tiles in self.new_map:
-            self.factory.create_tiles(self.world, tiles)
+            self.world.factory.create_tiles(tiles)
 
-
-def rotate_matrix_clockwise(original):
-    new = list(zip(*original[::-1]))
-    return new
-
-rotated_room_points = []
-for room in rooms:
-    i = 0
-    while i < 3:
-        room_points = []
-        for y in range(len(room)):
-            for x in range(len(room[y])):
-                room_points.append((x, y, room[y][x]))
-        rotated_room_points.append(room_points)
-        room = rotate_matrix_clockwise(room)
-        i += 1
 
