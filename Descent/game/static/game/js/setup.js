@@ -1,25 +1,25 @@
 
 var EmptyState = function() {
-    this.name = "EmptyState"; // Just to identify the State
-    this.update  = function (){};
-    this.render  = function (){};
-    this.onEnter = function (){};
-    this.onExit  = function (){};
+    var name = "EmptyState"; // Just to identify the State
+    var update  = function (){};
+    var render  = function (){};
+    var onEnter = function (){};
+    var onExit  = function (){};
 
     // Optional but useful
-    this.onPause = function (){};
-    this.onResume= function (){};
+    var onPause = function (){};
+    var onResume= function (){};
 };
 
 var StateList = function (){
         var states = [];
-        this.pop = function () {
+        var pop = function () {
                 return states.pop();
         };
-        this.push = function (state) {
+        var push = function (state) {
                 states.push(state);
         };
-        this.top = function (){
+        var top = function (){
                 return states[states.length-1];
         }
 };
@@ -27,36 +27,36 @@ var StateList = function (){
 var StateStack = function () {
     var states = new StateList();
     states.push(new EmptyState());
-    this.update = function (){
+    var update = function (){
             var state = states.top();
             if (state){
                     state.update();
             }
     };
-    this.render = function (){
+    var render = function (){
             var state = states.top();
             if (state){
                     state.render();
             }
     };
-    this.push = function (state) {
+    var push = function (state) {
             states.push(state);
             state.onEnter();
     };
-    this.pop = function () {
+    var pop = function () {
             var state = states.top();
             state.onExit();
             return states.pop();
     };
 
-    this.pause = function (){
+    var pause = function (){
             var state = states.top();
             if (state.onPause){
                     state.onPause();
             }
     };
 
-    this.resume = function (){
+    var resume = function (){
             var state = states.top();
             if (state.onResume){
                     state.onResume();

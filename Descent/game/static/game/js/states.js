@@ -1,23 +1,24 @@
 // MainMenuState.js
 var state_mainmenu = function () {
-    this.name = "state_mainmenu";
+    var 
 
-    var canvas = getCanvas(),
+    var name = "state_mainmenu",
+        canvas = getCanvas(),
         dimensions = getGameDimensions(),
         backgroundColor = "#000",
         textColor = "rgb(0,0,0)", // Starts with black
         colorsArray = [], // our fade values
         colorIndex = 0;
 
-    this.onEnter = function(){
+    var onEnter = function(){
         var i = 1,l=100,values = [];
         for(;i<=l;i++){
             values.push(Math.round(Math.sin(Math.PI*i/100)*255));
         }
-        colorsArray = values;
+        var colorsArray = values;
 
-        this.ui_state_layer  = document.createElement("div");
-        this.ui_state_layer.className += "mm_menu_wrapper";
+        var ui_state_layer  = document.createElement("div");
+        var ui_state_layer.className += "mm_menu_wrapper";
 
         var btn_group  = document.createElement("div");
         btn_group.className += "btn-group-vertical";
@@ -42,13 +43,11 @@ var state_mainmenu = function () {
         btn_group.appendChild(btn_startgame);
         btn_group.appendChild(btn_loadgame);
         
-        this.ui_state_layer.appendChild(btn_group);
-        Game.uiLayer.appendChild(this.ui_state_layer);
-
-
+        ui_state_layer.appendChild(btn_group);
+        Game.uiLayer.appendChild(ui_state_layer);
     };
 
-    this.onExit  = function(){
+    var onExit  = function(){
         // clear the keydown event
         window.onkeydown = null;
         canvas.clearRect(0,0,dimensions.width,dimensions.height)
@@ -56,10 +55,10 @@ var state_mainmenu = function () {
         canvas.fillStyle = backgroundColor;
         canvas.fillColor = backgroundColor;
         canvas.fillRect(0,0,dimensions.width,dimensions.height);
-        this.ui_state_layer.parentNode.removeChild(this.ui_state_layer)
+        ui_state_layer.parentNode.removeChild(ui_state_layer)
     };
 
-    this.update = function (){
+    var update = function (){
         // update values
         if (colorIndex == colorsArray.length){
             colorIndex = 0;
@@ -68,7 +67,7 @@ var state_mainmenu = function () {
         colorIndex++;
     };
 
-    this.render = function (){
+    var render = function (){
         // redraw
         canvas.clearRect(0,0,dimensions.width,dimensions.height)
         canvas.beginPath();
@@ -80,8 +79,6 @@ var state_mainmenu = function () {
         canvas.fillText("Descent", (dimensions.width/2)-(canvas.measureText("Descent").width/2), 100);
         canvas.font = "24pt Courier";
         canvas.fillText("Welcome "+username, (dimensions.width/2)-(canvas.measureText("Welcome "+username).width/2), 150);
-
-
         //canvas.fillText("Start Game", (dimensions.width/2)-(canvas.measureText("Start Game").width/2), 250);
         //canvas.fillText("Load Game", (dimensions.width/2)-(canvas.measureText("Load Game").width/2), 300);
 
@@ -89,38 +86,36 @@ var state_mainmenu = function () {
 };
 
 var state_game = function() {
-    this.name = "state_game"; // Just to identify the State
-    this.world = {};
-
-    var received_data = false;
-    var self = this;
-    var canvas = getCanvas(),
+    var world = {},
+        name = "state_game",
+        received_data = false,
+        canvas = getCanvas(),
         dimensions = getGameDimensions(),
-        backgroundColor = "#000"
+        backgroundColor = "#000",
+        asset_manager = new AssetManager(),
+        asset_manager.preload_assets(),
+        message_board = new Messenger(),
+        systems = new ECS_Systems(state_game, message_board),
+        camera  = new Camera(dimensions);
 
-    this.asset_manager = new AssetManager()
-    this.asset_manager.preload_assets()
-    this.message_board = new Messenger()
-    this.systems = new ECS_Systems(this, this.message_board);
-    this.camera  = new Camera(dimensions);
-    this.message_board.register(this.camera.notify)
+    message_board.register(camera.notify)
     
 
 
-    this.update  = function (){
+    var update  = function (){
         if(received_data == true){
             canvas.clearRect(0,0,dimensions.width,dimensions.height)
             canvas.beginPath();
             canvas.fillStyle = backgroundColor;
             canvas.fillColor = backgroundColor;
             canvas.fillRect(0,0,dimensions.width,dimensions.height);
-            this.systems.render(canvas, this.camera);    
-            this.systems.handle_user_input(getCanvasElement(), this.camera);
-            this.systems.camera_follow(this.world, this.camera);
+            systems.render(canvas, camera);    
+            systems.handle_user_input(getCanvasElement(), camera);
+            systems.camera_follow(world, camera);
         }
     };
 
-    this.onEnter = function (){
+    var onEnter = function (){
         socket.emit('mm_new_game');
         socket.on('get_world_data', function(data) {
             self.world = JSON.parse(data["world_data"]);
@@ -134,9 +129,9 @@ var state_game = function() {
         });
     };
 
-    this.render  = function (){};
-    this.onExit  = function (){};
-    this.onPause = function (){};
-    this.onResume= function (){};
+    var render  = function (){};
+    var onExit  = function (){};
+    var onPause = function (){};
+    var onResume= function (){};
 };
 

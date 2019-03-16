@@ -3,19 +3,19 @@
 // 			Make it more modular for the future
 
 var AssetManager = function(){
-	this.resource_folder = "game/resources";
-	this.resources = {};
+	var resource_folder = "game/resources";
+	var resources = {};
 
-	this.preload_assets = function(){
+	var preload_assets = function(){
 		assets = ["wall_01.png", "floor_stone_01.png", "NONE.png", "door.png", "character.png"]
 		
 		for (items in assets){
-			this.resources[assets[items]] = new Image();
-			this.resources[assets[items]].src = "game/resources/images/"+assets[items];
+			resources[assets[items]] = new Image();
+			resources[assets[items]].src = "game/resources/images/"+assets[items];
 		}
 	}
 
-	this.get_asset = function(file_name){
-		return this.resources[file_name];
+	var get_asset = function(file_name){
+		return resources[file_name];
 	}
 }
