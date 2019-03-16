@@ -8,11 +8,11 @@ function iso_to_cart(iso_x, iso_y){
 // 	iso_y = (cart_x + cart_y) / 2;
 // 	return [iso_x, iso_y]
 // }
-// function cart_to_iso(cart_x, cart_y){
-// 	iso_x = (cart_x*(128/2)) - (cart_y*(128/2)) - (128/2);
-// 	iso_y = (cart_x*(128/2) + cart_y*(128/2)) / 2;
-// 	return [iso_x, iso_y]
-// }
+function cart_to_iso(cart_x, cart_y, tile_size){
+	iso_x = (cart_x*(tile_size/2)) - (cart_y*(tile_size/2)) - (tile_size/2);
+	iso_y = (cart_x*(tile_size/2) + cart_y*(tile_size/2)) / 2;
+	return [iso_x, iso_y]
+}
 
 function get_tile_coordinates(points, tile_size){
 	console.log([points[0] / (tile_size), points[0] / (tile_size)])

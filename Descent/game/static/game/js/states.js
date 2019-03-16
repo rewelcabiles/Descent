@@ -122,7 +122,7 @@ var state_game = function() {
         socket.on('get_world_data', function(data) {
             self.world = JSON.parse(data["world_data"]);
             self.systems.set_data(self.world, JSON.parse(data["component_data"]));
-            //self.player_id = data["player_id"];
+            self.player_id = data["player_id"];
             self.camera.set_target(self.player_id)
             received_data = true;
         });

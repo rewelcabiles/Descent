@@ -47,10 +47,9 @@ var ECS_Systems = function(state) {
 		if (camera.follow_target_id != null){
 			target_x = world["position"][camera.follow_target_id]["x"];
 			target_y = world["position"][camera.follow_target_id]["y"];
-			new_pos = cart_to_iso(target_x, target_y)
-			camera.camera_x = new_pos[0]*128*camera.scale-camera.viewport_width/2;
-			camera.camera_y = new_pos[1]*128*camera.scale-camera.viewport_height/2;
-
+			new_pos = cart_to_iso(target_x, target_y, 128)
+			camera.camera_x = (new_pos[0] * camera.scale) - camera.viewport_width/2;
+			camera.camera_y = (new_pos[1] * camera.scale) - camera.viewport_height/2;
 		}
 	}
 
@@ -67,11 +66,10 @@ var ECS_Systems = function(state) {
 			img = this.state.asset_manager.get_asset(image_name);
 			img_x = (position["x"]);
 			img_y = (position["y"]);
-			iso_x = (img_x*(sprite_sizes_y/2)) - (img_y*(sprite_sizes_y/2)) - (sprite_sizes_y/2);
-			iso_y = (img_x*(sprite_sizes_y/2) + img_y*(sprite_sizes_y/2)) / 2;
+			iso_pos = cart_to_iso(img_x, img_y, sprite_sizes_y);
 			canvas.drawImage(img,
-				(iso_x) - camera.camera_x,
-				(iso_y) - camera.camera_y,
+				(iso_pos[0]) - camera.camera_x,
+				(iso_pos[1]) - camera.camera_y,
 				sprite_sizes_x,
 				sprite_sizes_y);
 		}
