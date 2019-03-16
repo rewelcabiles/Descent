@@ -1,10 +1,16 @@
 var ECS_Systems = function(state) {
-	
+	//Properties
+	self = this
 	this.state = state
 	this.world = {}
 	this.COMPS = {}
-	textColor = "rgb(255,255,255)";
-	self = this
+	this.message_board = this.state.message_board
+	// Functions
+
+	this.notify = function(message){
+
+	}
+
 	this.create_dynamic_mask = function(component_list) {
 		temp_mask = 0;
 		for (components in component_list){
@@ -23,9 +29,7 @@ var ECS_Systems = function(state) {
 	this.set_data = function(world, components){
 		this.world = world;
 		this.COMPS = components
-
 	}
-
 
 	this.update_z_layer = function(){
 		component_list = ["position", "image"];
@@ -97,12 +101,24 @@ var ECS_Systems = function(state) {
 			var raw_pos = get_cursor(canvas, e)
 			var pos = scale_mouse_clicks(raw_pos, camera);
 			var cart_pos = get_tile_coordinates(iso_to_cart(pos[0], pos[1]), 128*camera.scale);
-			console.log("Start");
-			console.log(raw_pos);
-			console.log(pos);
-			console.log(cart_pos);
-			console.log("Ends");
 		});
 	}
+}
 
+var Messenger = function(){
+	this.observers = []
+
+	this.add_to_queue = function(message){
+		this.notify_observers(message)
+	}
+
+	this.register = function(observer){
+		this.observers.append(observer)
+	}
+
+	this.notify_observers = function(message){
+		for (observer in this.observers){
+			observer(message)
+		}
+	}
 }

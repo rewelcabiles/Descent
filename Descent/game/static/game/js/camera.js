@@ -10,4 +10,10 @@ var Camera = function(dimensions){
 	this.set_target = function(target){
 		this.follow_target_id = target;
 	}
+	this.notify = function(message){
+		if(message["type"] == "change_camera_target"){
+			this.set_target(message["data"])
+		}
+	}
+
 }
