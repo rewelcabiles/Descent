@@ -67,10 +67,11 @@ var ECS_Systems = function(state) {
 			img = this.state.asset_manager.get_asset(image_name);
 			img_x = (position["x"]);
 			img_y = (position["y"]);
-			var iso_pos = cart_to_iso(img_x, img_y)
+			iso_x = (img_x*(sprite_sizes_y/2)) - (img_y*(sprite_sizes_y/2)) - (sprite_sizes_y/2);
+			iso_y = (img_x*(sprite_sizes_y/2) + img_y*(sprite_sizes_y/2)) / 2;
 			canvas.drawImage(img,
-				iso_pos[0] * sprite_sizes_x - camera.camera_x ,
-				iso_pos[1] * sprite_sizes_y - camera.camera_y,
+				(iso_x) - camera.camera_x,
+				(iso_y) - camera.camera_y,
 				sprite_sizes_x,
 				sprite_sizes_y);
 		}
@@ -95,16 +96,15 @@ var ECS_Systems = function(state) {
 			}
 		});
 		$(document.body).on('mousedown', function(e){
-			var pos = getCursorPosition(canvas, e);
-			var test = iso_to_cart(pos["x"], pos["y"]);
+			var raw_pos = get_cursor(canvas, e)
+			var pos = scale_mouse_clicks(raw_pos, camera);
+			var cart_pos = get_tile_coordinates(iso_to_cart(pos[0], pos[1]), 128*camera.scale);
+			console.log("Start");
+			console.log(raw_pos);
+			console.log(pos);
+			console.log(cart_pos);
+			console.log("Ends");
 		});
 	}
 
-}
-function getCursorPosition(canvas, event) {
-    var rect = canvas.getBoundingClientRect();
-    var x = event.clientX - rect.left;
-    var y = event.clientY - rect.top;
-    console.log("x: " + x + " y: " + y);
-    return {"x":x, "y":y}
 }
