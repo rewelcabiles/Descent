@@ -15,7 +15,6 @@ function cart_to_iso(cart_x, cart_y, tile_size){
 }
 
 function get_tile_coordinates(points, tile_size){
-	console.log([points[0] / (tile_size), points[0] / (tile_size)])
 	temp_x = Math.floor(points[0] / (tile_size));
 	temp_y = Math.floor(points[1] / (tile_size));
 	return [temp_x, temp_y];

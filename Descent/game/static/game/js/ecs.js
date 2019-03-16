@@ -1,10 +1,14 @@
-var ECS_Systems = function(state) {
+function ECS_Systems (state, message_board) {
 	//Properties
-	self = this
+	
 	this.state = state
 	this.world = {}
 	this.COMPS = {}
-	this.message_board = this.state.message_board
+	this.message_board = message_board
+
+	var kibo = new Kibo()
+
+	self = this
 	// Functions
 
 	this.notify = function(message){
@@ -81,22 +85,23 @@ var ECS_Systems = function(state) {
 	}
 
 	this.handle_user_input = function(canvas, camera) {
-		$(document.body).on('keydown', function(e){
-			switch (e.which){
-				case 37:
-					camera.camera_x -= 1;
+		kibo.up(["any arrow"],function(){
+			switch (kibo.lastKey()){
+				case "left":
+					camera.camera_x -= 1;		
 					break
-				case 39:
+				case "right":
 					camera.camera_x += 1;
 					break
-				case 38:
+				case "up":
 					camera.camera_y -= 1;
 					break
-				case 40:
+				case "down":
 					camera.camera_y += 1;
 					break
 			}
 		});
+
 		$(document.body).on('mousedown', function(e){
 			var raw_pos = get_cursor(canvas, e)
 			var pos = scale_mouse_clicks(raw_pos, camera);
@@ -110,15 +115,17 @@ var Messenger = function(){
 
 	this.add_to_queue = function(message){
 		this.notify_observers(message)
+		
 	}
 
 	this.register = function(observer){
-		this.observers.append(observer)
+		this.observers.push(observer)
+		console.log(this.observers)
 	}
 
 	this.notify_observers = function(message){
-		for (observer in this.observers){
-			observer(message)
-		}
+		this.observers.forEach(function(observer){
+			observer(message);
+		});
 	}
 }

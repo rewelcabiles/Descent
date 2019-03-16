@@ -6,14 +6,14 @@ var Camera = function(dimensions){
 	this.viewport_height = dimensions.height;
 	this.viewport_center = {"x":this.viewport_height / 2, "y":this.viewport_width / 2}
 	this.follow_target_id = null;
-
-	this.set_target = function(target){
+	self = this;
+	this.set_target = function(target) {
 		this.follow_target_id = target;
 	}
+
 	this.notify = function(message){
 		if(message["type"] == "change_camera_target"){
-			this.set_target(message["data"])
+			self.set_target(message["data"]);
 		}
 	}
-
 }
