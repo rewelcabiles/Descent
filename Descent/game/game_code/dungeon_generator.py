@@ -13,22 +13,6 @@ class Division():
                 temp_map.append((x, y, 0))
         return temp_map
 
-    def add_perimiter(self, map_):
-        max_x = [x for x, y, v in map_]
-        max_x.sort()
-        max_y = [y for x, y, v in map_]
-        max_y.sort()
-        for x, y, v in map_:
-            if y == 0:
-                map_[map_.index((x, y, v))] = (x, y, 1)
-            elif x == 0:
-                map_[map_.index((x, y, v))] = (x, y, 1)
-            elif x == max_x[-1]:
-                map_[map_.index((x, y, v))] = (x, y, 1)                
-
-            elif y == max_y[-1]:
-                map_[map_.index((x, y, v))] = (x, y, 1)
-        return map_
 
     def divide(self, map_points):
         sub1 = []
@@ -70,7 +54,6 @@ class Division():
         node = random.choice(remain_stack)
         while current_rooms < rooms_needed:
             node = random.choice(remain_stack)
-            #node = remain_stack[0]
             new_nodes = self.divide(node)
             current_rooms += 1
             for new_node in new_nodes:
