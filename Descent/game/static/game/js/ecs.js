@@ -1,14 +1,14 @@
-function ECS_Systems (state, message_board) {
+function ECS_Systems (asset_manager, message_board) {
 	//Properties
 	
-	this.state = state
 	this.world = {}
 	this.COMPS = {}
-	this.message_board = message_board
 
+	var asset_manager = asset_manager
+	var message_board = message_board
 	var kibo = new Kibo()
 
-	self = this
+	var self = this
 	// Functions
 
 	this.notify = function(message){
@@ -30,13 +30,13 @@ function ECS_Systems (state, message_board) {
 		}
 	}
 
-	this.set_data = function(world, components){
-		this.world = world;
+	this.set_data = function(worlds, components){
+		this.world = worlds;
 		this.COMPS = components
 	}
 
 	this.update_z_layer = function(){
-		component_list = ["position", "image"];
+		let component_list = ["position", "image"];
 		this.z_layer = []
 		for (entity_id in this.world["mask"]){
 			if(this.has_components(entity_id, component_list)){
@@ -53,8 +53,8 @@ function ECS_Systems (state, message_board) {
 	
 	this.camera_follow = function(world, camera){
 		if (camera.follow_target_id != null){
-			target_x = world["position"][camera.follow_target_id]["x"];
-			target_y = world["position"][camera.follow_target_id]["y"];
+			target_x = this.world["position"][camera.follow_target_id]["x"];
+			target_y = this.world["position"][camera.follow_target_id]["y"];
 			new_pos = cart_to_iso(target_x, target_y, 128)
 			camera.camera_x = (new_pos[0] * camera.scale) - camera.viewport_width/2;
 			camera.camera_y = (new_pos[1] * camera.scale) - camera.viewport_height/2;
@@ -71,7 +71,7 @@ function ECS_Systems (state, message_board) {
 			entity_id = this.z_layer[i];
 			image_name = this.world["image"][entity_id]["file_name"]
 			position   = this.world["position"][entity_id]
-			img = this.state.asset_manager.get_asset(image_name);
+			img = asset_manager.get_asset(image_name);
 			img_x = (position["x"]);
 			img_y = (position["y"]);
 			iso_pos = cart_to_iso(img_x, img_y, sprite_sizes_y);

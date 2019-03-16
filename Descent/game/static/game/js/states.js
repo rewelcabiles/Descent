@@ -97,15 +97,14 @@ var state_game = function() {
     var canvas = getCanvas(),
         dimensions = getGameDimensions(),
         backgroundColor = "#000"
-
+    self = this
     this.asset_manager = new AssetManager()
     this.asset_manager.preload_assets()
     this.message_board = new Messenger()
-    this.systems = new ECS_Systems(this, this.message_board);
+    this.systems = new ECS_Systems(this.asset_manager, this.message_board);
     this.camera  = new Camera(dimensions);
     this.message_board.register(this.camera.notify)
-    
-
+    this.message_board.register(this.systems.notify)
 
     this.update  = function (){
         if(received_data == true){
@@ -126,10 +125,10 @@ var state_game = function() {
             self.world = JSON.parse(data["world_data"]);
             self.systems.set_data(self.world, JSON.parse(data["component_data"]));
             self.player_id = data["player_id"];
-            // self.message_board.add_to_queue({
-            //     "type" : "change_camera_target",
-            //     "data" : data["player_id"]
-            // });
+            self.message_board.add_to_queue({
+                "type" : "change_camera_target",
+                "data" : data["player_id"]
+            });
             received_data = true;
         });
     };
