@@ -1,6 +1,7 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 var username = ""
 var user_id = null
+
 socket.on('connect', function() {
     socket.emit('sync users', {data: 'Client Connection'});
 });

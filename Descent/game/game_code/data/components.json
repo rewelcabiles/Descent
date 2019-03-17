@@ -1,17 +1,25 @@
  {
 	"mask" : {},
 	
+	"tile":{
+		"walkable": true
+	},
+	"object":{
+		"walkable": true
+	},
+	"actor":{
+		"walkable": true
+	},
 	"position":{
 		"x": 0,
 		"y": 0
 	},
-
+	
 	"image":{
 		"file_name": "NONE.png"
 	},
-	"room":{
-		"tiles":[],
-		"center":0
+	"can_move":{
+		"tile_destination": null
 	}
 }
 

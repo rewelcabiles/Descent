@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import ValidationError, DataRequired, EqualTo, Length
 from Descent.users.models import User
+from Descent import mongo
 
 
 class LoginForm(FlaskForm):
@@ -25,6 +26,6 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Create Account')
 
     def validate_username(self, username):
-        username = User.query.filter_by(username=username.data).first()
+        username = mongo.db.users.find_one({"username":username.data})
         if username:
             raise ValidationError('Error: That Username is already taken. ')
