@@ -1,6 +1,6 @@
 from flask import render_template, request, url_for, flash, redirect, Blueprint
 from flask_login import current_user, login_required, login_user, logout_user
-from Descent import db, bcrypt
+from Descent import mongo, bcrypt
 from Descent.users.forms import LoginForm, RegisterForm
 from Descent.users.models import User
 users = Blueprint(
@@ -17,13 +17,11 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('site.home'))
 
-
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and \
-            bcrypt.check_password_hash(
-                user.password, form.password.data):
-            login_user(user)
+        user = mongo.db.users.find_one({"username":form.username.data})
+        if user and bcrypt.check_password_hash(user['password'], form.password.data):
+            user_obj = User(user["username"])
+            login_user(user_obj)
             return redirect(url_for('site.home'))
         else:
             flash('Login Failed. Check Username or Password', 'danger')
@@ -35,12 +33,13 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_pass = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(
-            username=form.username.data,
-            password=hashed_pass
-        )
-        db.session.add(new_user)
-        db.session.commit()
+        username = form.username.data  
+        user = mongo.db.users
+        user.insert({
+            'username':username,
+            'password':hashed_pass
+            })
+
         return redirect(url_for('site.home'))
     return render_template("register.html", form=form)
 
