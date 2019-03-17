@@ -16,6 +16,7 @@ setup(
             'flask_bcrypt',
             'pymysql',
             'flask-socketio',
-            'eventlet'
+            'eventlet',
+            "flask_pymongo"
             ]
         )

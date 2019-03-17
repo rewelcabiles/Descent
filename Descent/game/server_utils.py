@@ -22,7 +22,7 @@ class Game:
         socketio.emit("get_world_data", {
             "world_data": self.world.get_world_as_json(),
             "component_data": self.world.get_components_as_json(),
-            "player_id": current_user.user_id
+            "player_id": current_user.username
             })
 
     def update(self):
@@ -39,10 +39,10 @@ class Server:
 
     def new_connection(self, user):
         connection = Connection(self.static_game, user)
-        self.connection_list[str(user.user_id)] = connection
+        self.connection_list[str(user.username)] = connection
 
-    def get_connection(self, user_id):
-        return self.connection_list[str(user_id)]
+    def get_connection(self, username):
+        return self.connection_list[str(username)]
 
     def sync_users(self, packet):
         if current_user.is_authenticated:
@@ -50,6 +50,6 @@ class Server:
             self.new_connection(current_user)
             socketio.emit('initial_user_info', {
                 'username': current_user.username, 
-                'id':current_user.user_id})
+                'id':current_user.username})
 
     
