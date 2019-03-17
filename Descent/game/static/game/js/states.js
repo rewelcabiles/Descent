@@ -110,7 +110,7 @@ var state_game = function() {
 
     self = this
 
-    this.update  = function (){
+    this.update = function (){
         if(received_data == true){
             canvas.clearRect(0,0,dimensions.width,dimensions.height)
             canvas.beginPath();
@@ -118,7 +118,7 @@ var state_game = function() {
             canvas.fillColor = backgroundColor;
             canvas.fillRect(0,0,dimensions.width,dimensions.height);
             this.systems.render(canvas, this.camera);    
-            this.systems.camera_follow(this.world.get_world(), this.camera);
+            this.camera.update(this.world.get_world());
         }
     };
 
