@@ -1,4 +1,4 @@
-function ECS_Systems (asset_manager, message_board) {
+var ECS_Systems = function (asset_manager, message_board) {
 	//Properties
 	
 	this.world = {}
@@ -88,16 +88,16 @@ function ECS_Systems (asset_manager, message_board) {
 		kibo.up(["any arrow"],function(){
 			switch (kibo.lastKey()){
 				case "left":
-					camera.camera_x -= 1;		
+					camera.camera_x -= 10;		
 					break
 				case "right":
-					camera.camera_x += 1;
+					camera.camera_x += 10;
 					break
 				case "up":
-					camera.camera_y -= 1;
+					camera.camera_y -= 10;
 					break
 				case "down":
-					camera.camera_y += 1;
+					camera.camera_y += 10;
 					break
 			}
 		});
@@ -106,26 +106,8 @@ function ECS_Systems (asset_manager, message_board) {
 			var raw_pos = get_cursor(canvas, e)
 			var pos = scale_mouse_clicks(raw_pos, camera);
 			var cart_pos = get_tile_coordinates(iso_to_cart(pos[0], pos[1]), 128*camera.scale);
+			console.log(cart_pos);
 		});
 	}
 }
 
-var Messenger = function(){
-	this.observers = []
-
-	this.add_to_queue = function(message){
-		this.notify_observers(message)
-		
-	}
-
-	this.register = function(observer){
-		this.observers.push(observer)
-		console.log(this.observers)
-	}
-
-	this.notify_observers = function(message){
-		this.observers.forEach(function(observer){
-			observer(message);
-		});
-	}
-}

@@ -105,7 +105,7 @@ var state_game = function() {
     this.camera  = new Camera(dimensions);
     this.message_board.register(this.camera.notify)
     this.message_board.register(this.systems.notify)
-
+    this.systems.handle_user_input(getCanvasElement(), this.camera);
     this.update  = function (){
         if(received_data == true){
             canvas.clearRect(0,0,dimensions.width,dimensions.height)
@@ -114,7 +114,7 @@ var state_game = function() {
             canvas.fillColor = backgroundColor;
             canvas.fillRect(0,0,dimensions.width,dimensions.height);
             this.systems.render(canvas, this.camera);    
-            this.systems.handle_user_input(getCanvasElement(), this.camera);
+            
             this.systems.camera_follow(this.world, this.camera);
         }
     };
@@ -125,10 +125,10 @@ var state_game = function() {
             self.world = JSON.parse(data["world_data"]);
             self.systems.set_data(self.world, JSON.parse(data["component_data"]));
             self.player_id = data["player_id"];
-            self.message_board.add_to_queue({
-                "type" : "change_camera_target",
-                "data" : data["player_id"]
-            });
+            // self.message_board.add_to_queue({
+            //     "type" : "change_camera_target",
+            //     "data" : data["player_id"]
+            // });
             received_data = true;
         });
     };

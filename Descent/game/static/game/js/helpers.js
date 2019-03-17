@@ -28,3 +28,21 @@ function get_cursor(canvas, event) {
 function scale_mouse_clicks(pos, camera){
 	return [(pos[0]+camera.camera_x), (pos[1]+camera.camera_y)];
 }
+
+var Messenger = function(){
+	this.observers = []
+
+	this.add_to_queue = function(message){
+		this.notify_observers(message)
+	}
+
+	this.register = function(observer){
+		this.observers.push(observer)
+	}
+
+	this.notify_observers = function(message){
+		this.observers.forEach(function(observer){
+			observer(message);
+		});
+	}
+}
