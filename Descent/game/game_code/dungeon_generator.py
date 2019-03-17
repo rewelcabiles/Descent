@@ -1,37 +1,19 @@
 #!/usr/bin/env python
 import random
-import Descent.game.game_code.factory as factory
 
 
 class Division():
     def __init__(self, world):
         self.world = world
-        self.factory = factory.Factory()
-
 
     def create_blank_map(self, max_x, max_y):
         temp_map = []
+        self.grid = SquareGrid(max_x, max_y)
         for x in range(max_x):
             for y in range(max_y):
                 temp_map.append((x, y, 0))
         return temp_map
 
-    def add_perimiter(self, map_):
-        max_x = [x for x, y, v in map_]
-        max_x.sort()
-        max_y = [y for x, y, v in map_]
-        max_y.sort()
-        for x, y, v in map_:
-            if y == 0:
-                map_[map_.index((x, y, v))] = (x, y, 1)
-            elif x == 0:
-                map_[map_.index((x, y, v))] = (x, y, 1)
-            elif x == max_x[-1]:
-                map_[map_.index((x, y, v))] = (x, y, 1)                
-
-            elif y == max_y[-1]:
-                map_[map_.index((x, y, v))] = (x, y, 1)
-        return map_
 
     def divide(self, map_points):
         sub1 = []
@@ -73,7 +55,6 @@ class Division():
         node = random.choice(remain_stack)
         while current_rooms < rooms_needed:
             node = random.choice(remain_stack)
-            #node = remain_stack[0]
             new_nodes = self.divide(node)
             current_rooms += 1
             for new_node in new_nodes:
@@ -81,22 +62,34 @@ class Division():
                     remain_stack.append(new_node)
             remain_stack.remove(node)
         for tiles in self.new_map:
-            self.factory.create_tiles_2(self.world, tiles)
+            if tiles[2] == 1:
+                self.grid.walls.append((tiles[0], tiles[1]))
+            self.world.factory.create_tiles(tiles)
+        self.world.set_grid(self.grid)
 
+class SquareGrid:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.walls = []
+        self.weights = {}
+        
+    def in_bounds(self, id):
+        (x, y) = id
+        return 0 <= x < self.width and 0 <= y < self.height
+    
+    def passable(self, id):
+        return id not in self.walls
+    
+    def neighbors(self, id):
+        (x, y) = id
+        results = [(x+1, y), (x, y-1), (x-1, y), (x, y+1)]
+        if (x + y) % 2 == 0: results.reverse() # aesthetics
+        results = filter(self.in_bounds, results)
+        results = filter(self.passable, results)
+        return results
 
-def rotate_matrix_clockwise(original):
-    new = list(zip(*original[::-1]))
-    return new
-
-rotated_room_points = []
-for room in rooms:
-    i = 0
-    while i < 3:
-        room_points = []
-        for y in range(len(room)):
-            for x in range(len(room[y])):
-                room_points.append((x, y, room[y][x]))
-        rotated_room_points.append(room_points)
-        room = rotate_matrix_clockwise(room)
-        i += 1
-
+    def cost(self, from_node, to_node):
+        return self.weights.get(to_node, 1)
+    
+        
