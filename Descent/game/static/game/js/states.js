@@ -90,22 +90,26 @@ var state_mainmenu = function () {
 
 var state_game = function() {
     this.name = "state_game"; // Just to identify the State
-    this.world = {};
+    
 
     var received_data = false;
     var self = this;
     var canvas = getCanvas(),
         dimensions = getGameDimensions(),
         backgroundColor = "#000"
-    self = this
+    
     this.asset_manager = new AssetManager()
     this.asset_manager.preload_assets()
     this.message_board = new Messenger()
-    this.systems = new ECS_Systems(this.asset_manager, this.message_board);
+    this.world = new world();
+    this.systems = new ECS_Systems(this.world, this.asset_manager, this.message_board);
     this.camera  = new Camera(dimensions);
     this.message_board.register(this.camera.notify)
     this.message_board.register(this.systems.notify)
     this.systems.handle_user_input(getCanvasElement(), this.camera);
+
+    self = this
+
     this.update  = function (){
         if(received_data == true){
             canvas.clearRect(0,0,dimensions.width,dimensions.height)
@@ -114,16 +118,14 @@ var state_game = function() {
             canvas.fillColor = backgroundColor;
             canvas.fillRect(0,0,dimensions.width,dimensions.height);
             this.systems.render(canvas, this.camera);    
-            
-            this.systems.camera_follow(this.world, this.camera);
+            this.systems.camera_follow(this.world.get_world(), this.camera);
         }
     };
 
     this.onEnter = function (){
         socket.emit('mm_new_game');
         socket.on('get_world_data', function(data) {
-            self.world = JSON.parse(data["world_data"]);
-            self.systems.set_data(self.world, JSON.parse(data["component_data"]));
+            self.world.set_data(JSON.parse(data["world_data"]), JSON.parse(data["component_data"]));
             self.player_id = data["player_id"];
             // self.message_board.add_to_queue({
             //     "type" : "change_camera_target",
