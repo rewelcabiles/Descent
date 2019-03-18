@@ -2,11 +2,6 @@ from Descent.game.game_code import world, dungeon_generator, systems
 from Descent import socketio
 from flask_login import current_user
 
-class Connection:
-    def __init__(self, game, user=None):
-        self.user = user
-        self.game = game
-
 
 class Game:
     def __init__(self):
@@ -15,8 +10,14 @@ class Game:
         self.systems = systems.Systems(self.world, self.message_board)
         self.generator  = dungeon_generator.Division(self.world)
         self.generator.division()
-        self.player_id = self.systems.add_player()
         socketio.on_event('mm_new_game', self.send_world_data)
+        
+
+    def remove_player(self, username):
+        self.world.remove_player(username)
+
+    def add_new_player(self, username):
+        self.world.add_new_player(username, self.systems.add_player())
 
     def send_world_data(self):
         socketio.emit("get_world_data", {
@@ -33,21 +34,19 @@ class Game:
 
 class Server:
     def __init__(self):
-        self.connection_list = {}
         self.static_game = Game()
-        socketio.on_event('sync users', self.sync_users)
+        socketio.on_event('connected', self.sync_users)
+        socketio.on_event('disconnect', self.remove_connection)
 
-    def new_connection(self, user):
-        connection = Connection(self.static_game, user)
-        self.connection_list[str(user.username)] = connection
+    def remove_connection(self):
+        self.static_game.remove_player(current_user.username)
 
-    def get_connection(self, username):
-        return self.connection_list[str(username)]
+    def new_connection(self):
+        self.static_game.add_new_player(current_user.username)
 
-    def sync_users(self, packet):
+    def sync_users(self):
         if current_user.is_authenticated:
-            print("SYNCING")
-            self.new_connection(current_user)
+            self.new_connection()
             socketio.emit('initial_user_info', {
                 'username': current_user.username, 
                 'id':current_user.username})

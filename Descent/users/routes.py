@@ -37,7 +37,8 @@ def register():
         user = mongo.db.users
         user.insert({
             'username':username,
-            'password':hashed_pass
+            'password':hashed_pass,
+            'character': {"level":1, "xp":100}
             })
 
         return redirect(url_for('site.home'))

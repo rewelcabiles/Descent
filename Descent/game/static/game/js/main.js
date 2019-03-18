@@ -3,7 +3,7 @@ var username = ""
 var user_id = null
 
 socket.on('connect', function() {
-    socket.emit('sync users', {data: 'Client Connection'});
+    socket.emit('connected');
 });
 
 socket.on('initial_user_info', function(data) {

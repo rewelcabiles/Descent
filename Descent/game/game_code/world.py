@@ -20,6 +20,13 @@ class World():
 			iterator += 1
 		self.entity_id_max = 9000
 		self.factory = factory.Factory(self)
+		self.players = {}
+
+	def add_new_player(self, player_name, entity_id):
+		self.players[player_name] = entity_id
+
+	def remove_player(self, player_name):
+		del self.players[player_name]
 
 	def set_grid(self, grid):
 		self.grid = grid

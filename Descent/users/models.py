@@ -5,6 +5,7 @@ from flask_login import UserMixin
 @login_manager.user_loader
 def load_user(username):
 	user = mongo.db.users.find_one({"username": username})
+	print(user)
 	if not user:
 		return None
 	return User(user['username'])
@@ -24,6 +25,10 @@ class User():
 
 	def is_anonymous(self):
 		return False
+
+	def get_character(self):
+		user = mongo.db.users.find_one({"username": username})
+		return user["character"]
 
 	def get_id(self):
 		return self.username
