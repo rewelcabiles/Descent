@@ -5,7 +5,6 @@ from flask_login import UserMixin
 @login_manager.user_loader
 def load_user(username):
 	user = mongo.db.users.find_one({"username": username})
-	print(user)
 	if not user:
 		return None
 	return User(user['username'])

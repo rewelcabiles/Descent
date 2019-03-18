@@ -58,6 +58,10 @@ var ECS_Systems = function (world, asset_manager, message_board) {
 			var pos = scale_mouse_clicks(raw_pos, camera);
 			var cart_pos = get_tile_coordinates(iso_to_cart(pos[0], pos[1]), 128*camera.scale);
 			console.log(cart_pos);
+			socket.emit('client_event', {
+				'type': 'tile_click',
+				'position' : cart_pos
+			});
 		});
 	}
 }

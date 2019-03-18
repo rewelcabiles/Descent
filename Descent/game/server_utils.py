@@ -10,8 +10,8 @@ class Game:
         self.systems = systems.Systems(self.world, self.message_board)
         self.generator  = dungeon_generator.Division(self.world)
         self.generator.division()
-        socketio.on_event('mm_new_game', self.send_world_data)
-        
+        socketio.on_event('connect_world', self.send_world_data)
+        socketio.on_event("client_event", self.receive_events)        
 
     def remove_player(self, username):
         self.world.remove_player(username)
@@ -26,8 +26,9 @@ class Game:
             "player_id": current_user.username
             })
 
-    def update(self):
-        pass
+    def receive_events(self, data):
+        data["sent_by"] = current_user.username
+        self.message_board.add_to_queue(data)
 
 
 
@@ -50,5 +51,3 @@ class Server:
             socketio.emit('initial_user_info', {
                 'username': current_user.username, 
                 'id':current_user.username})
-
-    

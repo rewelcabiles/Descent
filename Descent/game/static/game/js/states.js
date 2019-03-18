@@ -123,7 +123,7 @@ var state_game = function() {
     };
 
     this.onEnter = function (){
-        socket.emit('mm_new_game');
+        socket.emit('connect_world');
         socket.on('get_world_data', function(data) {
             self.world.set_data(JSON.parse(data["world_data"]), JSON.parse(data["component_data"]));
             self.player_id = data["player_id"];
