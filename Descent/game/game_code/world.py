@@ -1,8 +1,8 @@
 import json
 import random
 import Descent.game.game_code.factory as factory
-import heapq
-
+from Descent.game.game_code.path_finding import SquareGrid
+import math
 
 class World():
 
@@ -25,11 +25,11 @@ class World():
 	def add_new_player(self, player_name, entity_id):
 		self.players[player_name] = entity_id
 
+	def get_component(self, component, entity_id):
+		return self.WORLD[component][entity_id]
+
 	def remove_player(self, player_name):
 		del self.players[player_name]
-
-	def set_grid(self, grid):
-		self.grid = grid
 
 	def assign_entity_id(self):
 		while True:
@@ -86,46 +86,27 @@ class World():
 	def get_components_as_json(self):
 		return json.dumps(self.COMPS)
 
+	def convert_world_to_graph(self):
+		all_pos = []
+		weights = {}
+		walls = []
+		for data in self.WORLD["position"].items():
+			if self.has_components(data[0], ['tile']):
+				new_pos = (data[1]['x'], data[1]['y'])
+				all_pos.append(new_pos)
+				weights[new_pos] = 1 if self.get_component("tile", data[0])["walkable"] else math.inf
 
+					
+		x_size = [x for x, y in all_pos]
+		x_size.sort()
+		y_size = [y for x, y in all_pos]
+		y_size.sort()
+		width = x_size[-1]+1
+		height= y_size[-1]+1
+		self.grid = SquareGrid(width, height)
+		self.grid.weights = weights
+		self.grid.walls = walls
+		
 
-class PriorityQueue:
-	def __init__(self):
-		self.elements = []
 	
-	def empty(self):
-		return len(self.elements) == 0
-	
-	def put(self, item, priority):
-		heapq.heappush(self.elements, (priority, item))
-	
-	def get(self):
-		return heapq.heappop(self.elements)[1]
 
-def heuristic(a, b):
-    (x1, y1) = a
-    (x2, y2) = b
-    return abs(x1 - x2) + abs(y1 - y2)
-
-def a_star_search(graph, start, goal):
-    frontier = PriorityQueue()
-    frontier.put(start, 0)
-    came_from = {}
-    cost_so_far = {}
-    came_from[start] = None
-    cost_so_far[start] = 0
-    
-    while not frontier.empty():
-        current = frontier.get()
-        
-        if current == goal:
-            break
-        
-        for next in graph.neighbors(current):
-            new_cost = cost_so_far[current] + graph.cost(current, next)
-            if next not in cost_so_far or new_cost < cost_so_far[next]:
-                cost_so_far[next] = new_cost
-                priority = new_cost + heuristic(goal, next)
-                frontier.put(next, priority)
-                came_from[next] = current
-    
-    return came_from, cost_so_far
