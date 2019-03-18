@@ -90,13 +90,13 @@ class World():
 		all_pos = []
 		weights = {}
 		walls = []
+
 		for data in self.WORLD["position"].items():
 			if self.has_components(data[0], ['tile']):
 				new_pos = (data[1]['x'], data[1]['y'])
 				all_pos.append(new_pos)
 				weights[new_pos] = 1 if self.get_component("tile", data[0])["walkable"] else math.inf
-
-					
+	
 		x_size = [x for x, y in all_pos]
 		x_size.sort()
 		y_size = [y for x, y in all_pos]

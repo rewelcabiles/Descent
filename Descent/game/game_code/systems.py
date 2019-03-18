@@ -1,4 +1,4 @@
-import random, heapq
+import random
 from Descent.game.game_code.path_finding import a_star_search
 
 class MessageBoard():
@@ -31,13 +31,10 @@ class Systems():
 			start_pos = self.world.get_component("position", entity_id)
 			start_pos = (start_pos['x'], start_pos['y'])
 			end_pos   = (message["position"][0], message["position"][1])
-			path = a_star_search(self.world.grid,start_pos, end_pos)
+			path = a_star_search(self.world.grid, start_pos, end_pos)
 			print(start_pos)
 			print(end_pos)
 			print(path)
-
-	def path_find(self, location_01, location_02):
-		pass
 
 	def add_player(self):
 		spawn_points = []
