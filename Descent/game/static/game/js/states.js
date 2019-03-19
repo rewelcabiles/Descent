@@ -90,51 +90,17 @@ var state_mainmenu = function () {
 
 var state_game = function() {
     this.name = "state_game"; // Just to identify the State
-    
-
-    var received_data = false;
-    var self = this;
-    var canvas = getCanvas(),
-        dimensions = getGameDimensions(),
-        backgroundColor = "#000"
-    
-    this.asset_manager = new AssetManager()
-    this.asset_manager.preload_assets()
-    this.message_board = new Messenger()
-    this.world = new world();
-    this.systems = new ECS_Systems(this.world, this.asset_manager, this.message_board);
-    this.camera  = new Camera(dimensions);
-    this.message_board.register(this.camera.notify)
-    this.message_board.register(this.systems.notify)
-    this.systems.handle_user_input(getCanvasElement(), this.camera);
-    self = this
 
     this.update = function (){
-        if(received_data == true){
-            canvas.clearRect(0,0,dimensions.width,dimensions.height)
-            canvas.beginPath();
-            canvas.fillStyle = backgroundColor;
-            canvas.fillColor = backgroundColor;
-            canvas.fillRect(0,0,dimensions.width,dimensions.height);
-            this.systems.render(canvas, this.camera);    
-            this.camera.update(this.world.get_world());
+        if(rpg.received_data == true){
+            rpg.renderer.render();
+            rpg.camera.update();
         }
     };
 
     this.onEnter = function (){
-        socket.on('new_packet', function(data) {
-            console.log("RECEIVED PACKET")
-            console.log(data)
-            if(data["type"] == "move_entity"){
-                self.systems.move_entity(self.world.get_world(), data["entity_id"], data["pos"])
-            }
-        });
-        socket.emit('connect_world');
-        socket.on('get_world_data', function(data) {
-            self.world.set_data(JSON.parse(data["world_data"]), JSON.parse(data["component_data"]));
-            self.player_id = data["player_id"];
-            received_data = true;
-        });
+        rpg = new GameSystem()
+        var socket_handler = new socket_func()
     };
     this.render  = function (){};
     this.onExit  = function (){};

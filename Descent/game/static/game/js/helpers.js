@@ -19,10 +19,12 @@ function get_tile_coordinates(points, tile_size){
 	temp_y = Math.floor(points[1] / (tile_size/2))-1;
 	return [temp_x, temp_y];
 }
-function get_cursor(canvas, event) {
-    var rect = canvas.getBoundingClientRect();
+
+function get_cursor(event) {
+    var rect = getCanvasElement().getBoundingClientRect();
     var x = event.clientX - rect.left;
     var y = event.clientY - rect.top;
+    
     return [x, y]
 }
 function scale_mouse_clicks(pos, camera){
