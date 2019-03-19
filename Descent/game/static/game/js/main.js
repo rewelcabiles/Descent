@@ -8,7 +8,6 @@ socket.on('connect', function() {
 
 socket.on('initial_user_info', function(data) {
     username = data["username"];
-    user_id  = data["user_id"];
 });
 
 var Game = {

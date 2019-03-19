@@ -107,7 +107,6 @@ var state_game = function() {
     this.message_board.register(this.camera.notify)
     this.message_board.register(this.systems.notify)
     this.systems.handle_user_input(getCanvasElement(), this.camera);
-
     self = this
 
     this.update = function (){
@@ -123,18 +122,20 @@ var state_game = function() {
     };
 
     this.onEnter = function (){
+        socket.on('new_packet', function(data) {
+            console.log("RECEIVED PACKET")
+            console.log(data)
+            if(data["type"] == "move_entity"){
+                self.systems.move_entity(self.world.get_world(), data["entity_id"], data["pos"])
+            }
+        });
         socket.emit('connect_world');
         socket.on('get_world_data', function(data) {
             self.world.set_data(JSON.parse(data["world_data"]), JSON.parse(data["component_data"]));
             self.player_id = data["player_id"];
-            // self.message_board.add_to_queue({
-            //     "type" : "change_camera_target",
-            //     "data" : data["player_id"]
-            // });
             received_data = true;
         });
     };
-
     this.render  = function (){};
     this.onExit  = function (){};
     this.onPause = function (){};

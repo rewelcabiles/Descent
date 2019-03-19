@@ -47,4 +47,12 @@ var world = function(){
 	this.sortMe = function(a, b){
 	    return (self.WORLD["position"][a]['x'] - self.WORLD["position"][b]['x']) || (self.WORLD["position"][a]['y'] - self.WORLD["position"][b]['y']);
 	}
+
+	this.add_to_world = function(data){
+		entity_id = data["entity_id"]
+		components= data["components"]
+		Object.entries(components).forEach(([key, value]) => {
+		   	this.WORLD[key][entity_id] = value;
+		});
+	}	
 }

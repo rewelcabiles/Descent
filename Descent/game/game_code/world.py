@@ -87,6 +87,12 @@ class World():
 	def get_components_as_json(self):
 		return json.dumps(self.COMPS)
 
+	def get_display_components(self, entity_id):
+		component_list = {}
+		component_list["position"] = self.WORLD["position"][entity_id]
+		component_list["image"] = self.WORLD["image"][entity_id]
+		return component_list
+
 	def convert_world_to_graph(self):
 		all_pos = []
 		weights = {}

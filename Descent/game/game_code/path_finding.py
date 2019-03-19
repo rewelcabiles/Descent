@@ -43,7 +43,7 @@ def a_star_search(graph, start, goal):
 	while current != start:
 		path.append(current)
 		current = came_from[current]
-	path.append(start) # optional
+	#path.append(start) # optional
 	path.reverse() # optional
 	return path
 

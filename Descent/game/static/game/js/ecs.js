@@ -1,6 +1,6 @@
 var ECS_Systems = function (world, asset_manager, message_board) {
 	//Properties
-	
+	// THINGS TO DO, CLEAN UP AND ORGANIZE CLIENT SIDE CODE
 	this.world = world
 	this.inputs = new InputHandler()
 	var asset_manager = asset_manager
@@ -12,6 +12,8 @@ var ECS_Systems = function (world, asset_manager, message_board) {
 	this.notify = function(message){
 
 	}
+
+
 
 	this.render = function(canvas, camera) {
 		//Components needed for this to render
@@ -43,6 +45,13 @@ var ECS_Systems = function (world, asset_manager, message_board) {
 		canvas.fillText("Camera Position X: "+camera.camera_x, 0,140); 
 		canvas.font = "15px Arial";
 		canvas.fillText("Camera Position Y: "+camera.camera_y, 0,180); 
+	}
+
+	this.move_entity = function(world, entity_id, new_pos){
+		world["position"][entity_id]["x"] = new_pos["x"]
+		world["position"][entity_id]["y"] = new_pos["y"]
+		console.log("MOVING ENTITY TO: ")
+		console.log(new_pos)
 	}
 
 	this.handle_user_input = function(canvas, camera) {
