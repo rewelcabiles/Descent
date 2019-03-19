@@ -8,11 +8,18 @@ class Game:
 	def __init__(self):
 		self.world = world.World()
 		self.message_board = systems.MessageBoard()
+		self.message_board.register(self.notify)
 		self.systems = systems.Systems(self.world, self.message_board)
 		self.generator  = dungeon_generator.Division(self.world)
 		self.generator.division()
 		socketio.on_event('connect_world', self.send_world_data)
 		socketio.on_event("client_event", self.receive_events)        
+
+	def notify(self, message):
+		if message["type"] == "send_packet":
+			print("SENDING PACKET")
+			print(message["data"])
+			socketio.emit("new_packet", message["data"])
 
 	def remove_player(self, username):
 		self.world.remove_player(username)

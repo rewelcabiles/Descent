@@ -7,7 +7,7 @@ var Camera = function(dimensions){
 	this.camera_acceleration = 2
 	this.camera_velocity_max = 10;
 
-	this.scale = 0.5;
+	this.scale = 0.6;
 
 	this.viewport_width  = dimensions.width;
 	this.viewport_height = dimensions.height;
