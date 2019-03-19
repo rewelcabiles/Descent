@@ -27,14 +27,20 @@ class Systems():
 
 	def notified(self, message):
 		if message['type'] == 'tile_click':
-			entity_id = self.world.players[message["sent_by"]]
-			start_pos = self.world.get_component("position", entity_id)
-			start_pos = (start_pos['x'], start_pos['y'])
-			end_pos   = (message["position"][0], message["position"][1])
-			path = a_star_search(self.world.grid, start_pos, end_pos)
-			print(start_pos)
-			print(end_pos)
-			print(path)
+			self.pathing(message)
+			
+	def pathing(self, message):
+		entity_id = self.world.players[message["sent_by"]]
+		start_pos = self.world.get_component("position", entity_id)
+		start_pos = (start_pos['x'], start_pos['y'])
+		end_pos   = (message["position"][0], message["position"][1])
+		path = a_star_search(self.world.grid, start_pos, end_pos)
+		print(path)
+		self.path_to_location(path, entity_id)
+
+	def path_to_location(self, entity_id, path):
+		pass
+
 
 	def add_player(self):
 		spawn_points = []
