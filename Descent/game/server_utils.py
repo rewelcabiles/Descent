@@ -40,9 +40,11 @@ class Server:
         socketio.on_event('disconnect', self.remove_connection)
 
     def remove_connection(self):
+        print("Disconnected: " + current_user.username)
         self.static_game.remove_player(current_user.username)
 
     def new_connection(self):
+        print("New Connection: " + current_user.username)
         self.static_game.add_new_player(current_user.username)
 
     def sync_users(self):

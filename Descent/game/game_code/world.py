@@ -29,6 +29,7 @@ class World():
 		return self.WORLD[component][entity_id]
 
 	def remove_player(self, player_name):
+		self.destroy_entity(self.players[player_name])
 		del self.players[player_name]
 
 	def assign_entity_id(self):
