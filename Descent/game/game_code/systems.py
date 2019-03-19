@@ -43,7 +43,7 @@ class Systems():
 		start_pos = (start_pos['x'], start_pos['y'])
 		end_pos   = (message["position"][0], message["position"][1])
 		path = a_star_search(self.world.grid, start_pos, end_pos)
-		self.pathing_system.add_to_jobs(Pathing_Job(entity_id, path, 20))
+		self.pathing_system.add_to_jobs(Pathing_Job(entity_id, path, 10))
 		
 
 	def add_player(self):
