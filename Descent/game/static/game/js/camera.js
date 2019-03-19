@@ -67,8 +67,8 @@ var Camera = function(dimensions){
 
 	this.camera_follow = function(world){
 		if (this.follow_target_id != null){
-			target_x = world.get_component("position",this.follow_target_id)["x"];
-			target_y = world.get_component("position", this.follow_target_id)["y"];
+			target_x = world["position"][this.follow_target_id]["x"];
+			target_y = world["position"][this.follow_target_id]["y"];
 			new_pos = cart_to_iso(target_x, target_y, 128)
 			this.camera_x = (new_pos[0] * this.scale) - this.viewport_width/2;
 			this.camera_y = (new_pos[1] * this.scale) - this.viewport_height/2;
