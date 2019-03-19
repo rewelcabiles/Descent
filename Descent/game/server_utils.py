@@ -1,3 +1,5 @@
+import eventlet
+eventlet.monkey_patch()
 from Descent.game.game_code import world, dungeon_generator, systems
 from Descent import socketio
 from flask_login import current_user
