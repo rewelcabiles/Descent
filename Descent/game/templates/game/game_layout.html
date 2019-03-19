@@ -29,14 +29,20 @@
   <script src="{{ url_for('resources.static', filename='jquery-ui/jquery-ui.min.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/libraries/socket.io.slim.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/libraries/kibo.js') }}"></script>
+  
+  <script src="{{ url_for('game.static', filename='js/game/game.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/setup.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/states.js') }}"></script>
-  <script src="{{ url_for('game.static', filename='js/world.js') }}"></script>
-  <script src="{{ url_for('game.static', filename='js/input_handler.js') }}"></script>
+
+  <script src="{{ url_for('game.static', filename='js/game/world.js') }}"></script>
+  <script src="{{ url_for('game.static', filename='js/game/ecs.js') }}"></script>
+  <script src="{{ url_for('game.static', filename='js/game/camera.js') }}"></script>
+  <script src="{{ url_for('game.static', filename='js/game/input_handler.js') }}"></script>
+  <script src="{{ url_for('game.static', filename='js/game/renderer.js') }}"></script>
+
+  <script src="{{ url_for('game.static', filename='js/socket_functions.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/resource_manager.js') }}"></script>
-  <script src="{{ url_for('game.static', filename='js/ecs.js') }}"></script>
-  <script src="{{ url_for('game.static', filename='js/camera.js') }}"></script>
   <script src="{{ url_for('game.static', filename='js/helpers.js') }}"></script>
   
   </body>

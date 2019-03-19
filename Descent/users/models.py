@@ -25,6 +25,10 @@ class User():
 	def is_anonymous(self):
 		return False
 
+	def get_character(self):
+		user = mongo.db.users.find_one({"username": username})
+		return user["character"]
+
 	def get_id(self):
 		return self.username
 
