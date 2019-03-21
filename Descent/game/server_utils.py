@@ -1,14 +1,17 @@
 import eventlet
 eventlet.monkey_patch()
 from Descent.game.game_code import world, dungeon_generator, systems
+from Descent.game import model_layer
 from Descent import socketio
 from flask_login import current_user
 from flask import request
 import _thread
 import time
+import random
 
 class Game:
-	def __init__(self):
+	def __init__(self, level_id):
+		self.level_id = level_id
 		self.world = world.World()
 		self.message_board = systems.MessageBoard()
 		self.message_board.register(self.notify)
@@ -42,6 +45,7 @@ class Game:
 				"component_data": self.world.get_components_as_json(),
 				"player_id": self.world.players[current_user.username]
 			}, room=clients[current_user.username].sid)
+		self.add_new_player(current_user.username, entity_id)
 
 	def receive_events(self, data):
 		data["sent_by"] = current_user.username
@@ -53,22 +57,38 @@ class Game:
 
 class Server:
 	def __init__(self):
-		self.static_game = Game()
+		model_layer.create_component_collection()
+		self.levels = {}
 		self.running = True
+		self.create_level()
 		global clients
 		clients = {}
 		_thread.start_new_thread(self.threaded_update, ())
 		socketio.on_event('connected', self.sync_users)
 		socketio.on_event('disconnect', self.remove_connection)
+		
+	def create_level(self):
+		while True:
+			level_id = random.randint(1, 2000)
+			if level_id not in self.levels.keys():
+				break
+		self.levels[level_id] = Game(level_id)
+		model_layer.save_level(self.levels[level_id].world.WORLD, level_id);
+		
+
+
 
 	def remove_connection(self):
 		print("Disconnected: " + current_user.username)
+		del clients[current_user.username]
 		self.static_game.remove_player(current_user.username)
 
 	def sync_users(self):
 		if current_user.is_authenticated:
 			clients[current_user.username] = Socket(request.sid, current_user.username)
-			socketio.emit('initial_user_info', {'username': current_user.username})
+			socketio.emit('initial_user_info', 
+				{'username': current_user.username}, 
+				room=clients[current_user.username].sid)
 
 	def threaded_update(self):
 		FPS = 30
@@ -77,9 +97,10 @@ class Server:
 			currentTime = time.time()
 			dt = currentTime - lastFrameTime
 			lastFrameTime = currentTime
-			#Code HERE
-			self.static_game.update(dt)
 
+			# CODE HERE
+			for area in self.levels.values():
+				area.update(dt)
 
 			sleepTime = 1./FPS - (currentTime - lastFrameTime)
 			if sleepTime > 0:
@@ -89,3 +110,7 @@ class Socket:
 	def __init__(self, sid, username):
 		self.sid = sid
 		self.username = username
+		self.level = None
+
+	def create_character(self):
+		pass

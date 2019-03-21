@@ -2,22 +2,28 @@ import json
 import random
 import Descent.game.game_code.factory as factory
 from Descent.game.game_code.path_finding import SquareGrid
+from Descent import mongo
 import math
 
 class World():
 
 	def __init__(self):
 		#Loads the files that contains all components
-		with open ('Descent/game/game_code/data/components.json') as component_files:
-		   self.components = json.load(component_files)
+		db_components = mongo.db.components
+		self.components = {}
+		for component in db_components.find():
+			self.components[component["name"]] = component["default_data"]
+
 		self.WORLD = {}
 		self.COMPS = {}
 		self.COMPS['none'] = 1 << 0
 		iterator = 1
+
 		for key in self.components:
 			self.WORLD[key] = {}
 			self.COMPS[key] = 1 << iterator
 			iterator += 1
+		
 		self.entity_id_max = 9000
 		self.factory = factory.Factory(self)
 		self.players = {}
