@@ -8,6 +8,8 @@ var socket_func = function(){
         console.log(data)
         if(data["type"] == "move_entity"){
             rpg.systems.move_entity(rpg.world.get_world(), data["entity_id"], data["pos"])
+        }else if (data["type"] == "new_connection"){
+            rpg.world.add_to_world(data["data"])
         }
     });
     

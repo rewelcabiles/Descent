@@ -19,21 +19,17 @@ class Game:
 		socketio.on_event("client_event", self.receive_events)        
 
 	def notify(self, message):
-		if message["type"] == "send_packet":
-			socketio.emit("new_packet", message["data"])
+		socketio.emit("new_packet", message)
 
 	def remove_player(self, username):
 		self.world.remove_player(username)
 
-	def add_new_player(self, username):
+	def add_new_player(self, username, entity_id):
 		data = {
-			"type": "send_packet",
+			"type":"new_connection",
 			"data": {
-				"type":"new_connection",
-				"data": {
-					"entity_id" : entity_id,
-					"components": self.world.get_display_components(entity_id)
-				}
+				"entity_id" : entity_id,
+				"components": self.world.get_display_components(entity_id)
 			}
 		}
 		self.message_board.add_to_queue(data)

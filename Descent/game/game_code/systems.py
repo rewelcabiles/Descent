@@ -70,9 +70,10 @@ class Pathing_System:
 				world.WORLD["position"][job.entity_id]["x"] = next_path["x"]
 				world.WORLD["position"][job.entity_id]["y"] = next_path["y"]
 				self.message_board.add_to_queue({
-					"type": "send_packet",
-					"data": {"type":"move_entity","entity_id": job.entity_id, "pos": next_path}
-					})
+					"type":"move_entity",
+					"entity_id": job.entity_id,
+					"pos": next_path}
+					)
 				job.ct = 0
 
 				if len(job.path) == 0:

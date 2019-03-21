@@ -89,7 +89,7 @@ var state_mainmenu = function () {
 };
 
 var state_game = function() {
-    this.name = "state_game"; // Just to identify the State
+    this.name = "state_game";
 
     this.update = function (){
         if(rpg.received_data == true){

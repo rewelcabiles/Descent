@@ -88,9 +88,10 @@ class World():
 		return json.dumps(self.COMPS)
 
 	def get_display_components(self, entity_id):
+		components = ["mask", "position", "image"]
 		component_list = {}
-		component_list["position"] = self.WORLD["position"][entity_id]
-		component_list["image"] = self.WORLD["image"][entity_id]
+		for c in components:
+			component_list[c] = self.WORLD[c][entity_id]
 		return component_list
 
 	def convert_world_to_graph(self):
@@ -102,7 +103,10 @@ class World():
 			if self.has_components(data[0], ['tile']):
 				new_pos = (data[1]['x'], data[1]['y'])
 				all_pos.append(new_pos)
-				weights[new_pos] = 1 if self.get_component("tile", data[0])["walkable"] else math.inf
+				if self.get_component("tile", data[0])["walkable"]:
+					weights[new_pos] = 1
+				else: 
+					walls.append(new_pos)
 	
 		x_size = [x for x, y in all_pos]
 		x_size.sort()
