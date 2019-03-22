@@ -10,14 +10,15 @@ import time
 import random
 
 class Game:
-	def __init__(self, level_id):
+	def __init__(self, level_id, randomized=True):
 		self.level_id = level_id
 		self.world = world.World()
 		self.message_board = systems.MessageBoard()
 		self.message_board.register(self.notify)
 		self.systems = systems.Systems(self.world, self.message_board)
-		self.generator  = dungeon_generator.Division(self.world)
-		self.generator.division()
+		if randomized:
+			self.generator  = dungeon_generator.Division(self.world)
+			self.generator.division()
 		socketio.on_event('connect_world', self.send_world_data)
 		socketio.on_event("client_event", self.receive_events)        
 
@@ -54,27 +55,32 @@ class Game:
 	def update(self, dt):
 		self.systems.update(dt)
 
+#//////////////////////////////////////////////!$#!@$!@$
 
 class Server:
 	def __init__(self):
 		model_layer.create_component_collection()
 		self.levels = {}
 		self.running = True
-		self.create_level()
+		#level_id = self.create_level()
+		new_game = Game(315)
+		world = model_layer.load_level(315)
+		new_game.world = world
+		self.levels[315] = new_game
 		global clients
 		clients = {}
 		_thread.start_new_thread(self.threaded_update, ())
 		socketio.on_event('connected', self.sync_users)
 		socketio.on_event('disconnect', self.remove_connection)
-		
+
 	def create_level(self):
 		while True:
 			level_id = random.randint(1, 2000)
 			if level_id not in self.levels.keys():
 				break
-		self.levels[level_id] = Game(level_id)
+		self.levels[level_id] = Game(level_id, randomized=False)
 		model_layer.save_level(self.levels[level_id].world.WORLD, level_id);
-		
+		return level_id
 
 
 

@@ -1,4 +1,5 @@
 from Descent import mongo
+from Descent.game.game_code import world as w
 import json
 
 
@@ -9,10 +10,17 @@ def create_character():
 		"username":username,
 		})
 
-def load_level(level_id, world):
+def load_level(level_id):
 	level = mongo.db.levels.find_one({"level_id":level_id})
+	world0 = w.World()
+	world = world0.WORLD
 	for component in level["data"]:
-		pass
+		db_comp = mongo.db.components.find_one({"name":component})
+		for db_entities in db_comp["entities"]:
+			if db_entities["level"] == level_id:
+				world[component][db_entities["entity_id"]] = db_entities["data"]
+	return world0
+
 
 def save_level(world, level_id):
 	print("SAVING")
@@ -24,7 +32,9 @@ def save_level(world, level_id):
 		for entity_id in world[components]:
 			data[components].append(entity_id)
 			to_update ={
-				str(entity_id) : world[components][entity_id]
+				"level": level_id,
+				"entity_id" : entity_id,
+				"data" : world[components][entity_id]
 			}
 			mongo.db.components.update({'name':components}, {'$push': {"entities": to_update}})
 
