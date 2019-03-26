@@ -1,5 +1,5 @@
 
-var socket_func = function(){
+var game_sockets = function(){
 
 	socket.emit('connect_world');
 

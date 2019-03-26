@@ -15,7 +15,6 @@ var Game = {
     canvas_width:   $(document).width(),
     canvas_height:  $(document).height(),
     canvasElement:  null,
-    uiLayer:        null,
     canvas :        null,
 
     // The game loop
@@ -53,14 +52,9 @@ var Game = {
         this.canvasElement = document.createElement("canvas");
         this.canvasElement.width = this.canvas_width;
         this.canvasElement.height = this.canvas_height;
-        
+        this.canvasElement.id = "main_canvas";
         this.canvas = this.canvasElement.getContext("2d");
 
-        this.uiLayer = document.createElement('div');
-        this.uiLayer.width = this.canvas_width;
-        this.uiLayer.height = this.canvas_height;
-        this.uiLayer.className += ' uiLayer';
-        wrapper.appendChild(this.uiLayer);
         wrapper.appendChild(this.canvasElement);
     },
 

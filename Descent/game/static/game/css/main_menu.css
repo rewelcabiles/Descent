@@ -1,8 +1,25 @@
 .mm_menu_wrapper {
-    text-align: center;
-    margin-top: 220px;
+    margin-top: 50px;
+
+}
+.content_row{
+	height:500px;
+
+}
+.title_text {
+	font-size: 100px;
 }
 
-.mm_centered_button {
-    
+.mm_buttons {
+    width:200px;
+    height:60px;
+    margin-top: 40px;
+}
+
+.full_logo {
+	height: 110%;
+	margin:auto;
+	display:block;
+	object-fit: cover;
+	border-radius: 50%;
 }
