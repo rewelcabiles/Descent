@@ -7,7 +7,7 @@ var AssetManager = function(){
 	this.resources = {};
 
 	this.preload_assets = function(){
-		assets = ["wall_01.png", "floor_stone_01.png", "NONE.png", "door.png", "door_right.png", "character.png"]
+		assets = ["wall_01.png", "floor_stone_01.png", "NONE.png", "door.png", "door_right.png", "character.png", "mage.png"]
 		
 		for (items in assets){
 			this.resources[assets[items]] = new Image();

@@ -6,7 +6,7 @@ var state_mainmenu = function () {
 
     $("#single_game").click(function(){
         Game.state_stack.pop()
-        Game.state_stack.push(new state_game());
+        Game.state_stack.push(new state_class_select());
     });
 
     //Canvas
@@ -35,13 +35,15 @@ var state_mainmenu = function () {
 
 var state_class_select = function(){
     this.name = "state_class_select";
-
+    socket.on('class_data', function(data){
+        console.log(data);
+    });
     this.update = function (){
         
     };
 
     this.onEnter = function (){
-        
+        socket.emit('class_select');
     };
     this.render  = function (){};
     this.onExit  = function (){};

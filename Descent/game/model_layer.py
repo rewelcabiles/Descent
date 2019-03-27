@@ -8,6 +8,18 @@ def load_level(level_id, world):
 		pass
 
 
+def get_class_data():
+	class_archetypes = mongo.db.class_archetypes
+	classes = []
+	for char in class_archetypes.find():
+		temp_class = {
+			"name": char["name"],
+			"image": char["components"]["image"]
+		}
+		classes.append(temp_class)
+	return classes
+
+
 def save_level(world, level_id):
 	print("SAVING")
 	level = mongo.db.levels
