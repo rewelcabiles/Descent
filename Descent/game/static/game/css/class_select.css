@@ -1,0 +1,16 @@
+.class_select_wrapper{
+	margin-top: 60px;
+}
+.character_portrait{
+	width: 100%;
+	margin:auto;
+	display:block;
+	object-fit: cover;
+}
+
+.cs_mid{
+	padding-left: 100px;
+	padding-right: 100px;
+	margin-right: 40px;
+	margin-left: 40px;
+}

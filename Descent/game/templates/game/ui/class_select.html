@@ -1,0 +1,39 @@
+<div class="container-fluid class_select_wrapper mx-4" id="ui_class_select">
+	<div class="container-fluid row">
+		<div class="container col-3">
+			<div class="container row cs_left">
+				<h2>BUTTONS</h2>
+			</div>
+			<div class="container row">
+				SAVE FOR LOBBY STUFF
+			</div>
+		</div>
+		<div id="cs_mid" class="container-fluid col-3 d-flex flex-column cs_mid">
+			<h3 class="text-center text-white">Choose A Class</h3>
+		</div>
+		<div class="container-fluid col cs_right">
+			<div class="row">
+				<div class="col">
+					<h1 id="cs_name" class="text-white text-center">Class Name</h1>
+					<hr>
+					<div class="row">
+						<div class="col">
+							<h5 id="cs_health" class="text-danger">Health: </h5>
+						</div>
+						<div class="col">
+							<h5 id="cs_mana" class="text-info">Mana: </h5>
+						</div>
+					</div>
+					<h5 id="cs_con" class="text-white">Con: </h5>
+					<h5 id="cs_agi" class="text-white">Agi: </h5>
+					<h5 id="cs_int" class="text-white">Int: </h5>
+					<h5 id="cs_str" class="text-white">Str: </h5>
+				</div>
+				<div class="col-6">
+					<img id="char_por" class="character_portrait" src="{{ url_for('game.static', filename='resources/images/Splash.png') }}" alt="" />
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>

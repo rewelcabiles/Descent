@@ -14,7 +14,8 @@ def get_class_data():
 	for char in class_archetypes.find():
 		temp_class = {
 			"name": char["name"],
-			"image": char["components"]["image"]
+			"image": char["components"]["image"],
+			"stats": char["components"]["character_stats"]
 		}
 		classes.append(temp_class)
 	return classes

@@ -10,6 +10,8 @@ socket.on('initial_user_info', function(data) {
     username = data["username"];
 });
 
+
+
 var Game = {
     // Canvas to draw on
     canvas_width:   $(document).width(),
@@ -24,6 +26,16 @@ var Game = {
 
 
     state_stack: new StateStack(),
+
+    set_ui: function(){
+        let children = $("#uiLayer").children();
+        this.ui = {};
+        for (var i=0; i<children.length; i++) {
+          let child_id = children[i].id;
+          this.ui[child_id] = $("#"+child_id)
+          $("#"+child_id).detach();
+        }
+    },
 
     update: function () {
         this.state_stack.update();
@@ -59,8 +71,10 @@ var Game = {
     },
 
     init: function () {
+        this.set_ui()
         this.setupCanvas(document.getElementById("main_window"));
         this.timer = 1000/this.FPS;
+        
         this.startGame();
     },
 }

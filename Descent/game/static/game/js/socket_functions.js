@@ -1,7 +1,8 @@
 
 var game_sockets = function(){
 
-	socket.emit('connect_world');
+    console.log("Emmiting Connect Game")
+	socket.emit('connect_game');
 
 	socket.on('new_packet', function(data) {
         console.log("RECEIVED PACKET")
