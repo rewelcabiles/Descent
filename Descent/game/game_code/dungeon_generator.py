@@ -3,8 +3,14 @@ import random
 
 
 class Division():
-    def __init__(self, world):
-        self.world = world
+    def __init__(self):
+        pass
+
+    def randomize_world(self, world):
+        self.division(14, 28, 24)
+        for tiles in self.new_map:
+            world.factory.create_tiles(tiles)
+        world.convert_world_to_graph()
 
     def create_blank_map(self, max_x, max_y):
         temp_map = []
@@ -46,10 +52,10 @@ class Division():
             self.new_map[self.new_map.index((rand_x, rand_y, 1))] = (rand_x, rand_y, 3)
         return [sub1, sub2]
 
-    def division(self):
-        rooms_needed = 14
+    def division(self, max_rooms, x, y):
+        rooms_needed = max_rooms
         current_rooms = 0
-        self.new_map = self.create_blank_map(28, 24)
+        self.new_map = self.create_blank_map(x, y)
         remain_stack = [self.new_map]
         node = random.choice(remain_stack)
         while current_rooms < rooms_needed:
@@ -60,6 +66,4 @@ class Division():
                 if len(new_node) > 24:
                     remain_stack.append(new_node)
             remain_stack.remove(node)
-        for tiles in self.new_map:
-            self.world.factory.create_tiles(tiles)
-        self.world.convert_world_to_graph()
+        

@@ -3,12 +3,11 @@ import random
 import Descent.game.game_code.factory as factory
 from Descent.game.game_code.path_finding import SquareGrid
 from Descent import mongo
-import math
+
 
 class World():
-
 	def __init__(self):
-		#Loads the files that contains all components
+		# Loads the files that contains all components
 		db_components = mongo.db.components
 		self.components = {}
 		for component in db_components.find():
@@ -23,20 +22,12 @@ class World():
 			self.WORLD[key] = {}
 			self.COMPS[key] = 1 << iterator
 			iterator += 1
-		
+
 		self.entity_id_max = 9000
 		self.factory = factory.Factory(self)
-		self.players = {}
-
-	def add_new_player(self, player_name, entity_id):
-		self.players[player_name] = entity_id
 
 	def get_component(self, component, entity_id):
 		return self.WORLD[component][entity_id]
-
-	def remove_player(self, player_name):
-		self.destroy_entity(self.players[player_name])
-		del self.players[player_name]
 
 	def assign_entity_id(self):
 		while True:
@@ -49,7 +40,7 @@ class World():
 		self.WORLD[component][entity_id] = self.components[component].copy()
 
 	def create_entity(self, component_list):
-		entity_id   = self.assign_entity_id()
+		entity_id = self.assign_entity_id()
 		for component in component_list:
 			self.create_component(component, entity_id)
 		self.WORLD["mask"][entity_id] = self.create_dynamic_mask(component_list)
@@ -59,7 +50,7 @@ class World():
 		temp_mask = 0
 		for comps in component_list:
 			temp_mask |= self.COMPS[comps]
-		return temp_mask		
+		return temp_mask
 
 	def has_components(self, ent_id, component_list):
 		temp_mask = self.create_dynamic_mask(component_list)
@@ -104,26 +95,20 @@ class World():
 		all_pos = []
 		weights = {}
 		walls = []
-
 		for data in self.WORLD["position"].items():
 			if self.has_components(data[0], ['tile']):
 				new_pos = (data[1]['x'], data[1]['y'])
 				all_pos.append(new_pos)
 				if self.get_component("tile", data[0])["walkable"]:
 					weights[new_pos] = 1
-				else: 
+				else:
 					walls.append(new_pos)
-	
 		x_size = [x for x, y in all_pos]
 		x_size.sort()
 		y_size = [y for x, y in all_pos]
 		y_size.sort()
-		width = x_size[-1]+1
-		height= y_size[-1]+1
+		width = x_size[-1] + 1
+		height = y_size[-1] + 1
 		self.grid = SquareGrid(width, height)
 		self.grid.weights = weights
 		self.grid.walls = walls
-		
-
-	
-
