@@ -1,7 +1,6 @@
 .class_select_wrapper{
-	margin-top: 60px;
-	padding-left: 200px;
-	padding-right: 200px;
+	padding-left: 100px;
+	padding-right: 100px;
 }
 .character_portrait{
 	width: 100%;
@@ -12,14 +11,16 @@
 
 .cs_mid{
 	padding-left: 80px;
-	padding-right: 80px;
-	margin-right: 40px;
-	margin-left: 40px;
+	padding-right: 80px;	
+}
+
+#cs_class_buttons{
+	height:100%;
 }
 
 .cs_left {
 }
 
 .cs_right {
-	
+	height:100%
 }

@@ -50,10 +50,14 @@ var state_class_select = function(){
             let character = data[index]
             let char_name = character["name"][0].toUpperCase() + character["name"].slice(1);
             character_list.push(character);
-            let new_button = "<button id='cs_"+character["name"]+"' class='btn btn-outline-danger mb-4'>"+char_name+"</button>"
-            $("#cs_mid").append(new_button);
+            let new_button = "<button id='cs_"+character["name"]+"' class='ui-button ui-widget ui-corner-all mb-4'>"+char_name+"</button>"
+            $("#cs_class_buttons").append(new_button);
             self.create_event(character)
         }
+        $( "#cs_hero_stats" ).tabs().css({
+           'min-height': '350px',
+           'overflow': 'auto'
+        });
         self.set_data(character_list[0])
     });
 
