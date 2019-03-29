@@ -1,39 +1,54 @@
 <div class="container-fluid class_select_wrapper mx-4" id="ui_class_select">
 	<div class="container-fluid row">
-		<div class="container col-3">
-			<div class="container row cs_left">
-				<h2>BUTTONS</h2>
-			</div>
-			<div class="container row">
-				SAVE FOR LOBBY STUFF
-			</div>
-		</div>
 		<div id="cs_mid" class="container-fluid col-3 d-flex flex-column cs_mid">
 			<h3 class="text-center text-white">Choose A Class</h3>
 		</div>
 		<div class="container-fluid col cs_right">
-			<div class="row">
-				<div class="col">
-					<h1 id="cs_name" class="text-white text-center">Class Name</h1>
-					<hr>
-					<div class="row">
-						<div class="col">
-							<h5 id="cs_health" class="text-danger">Health: </h5>
-						</div>
-						<div class="col">
-							<h5 id="cs_mana" class="text-info">Mana: </h5>
-						</div>
-					</div>
-					<h5 id="cs_con" class="text-white">Con: </h5>
-					<h5 id="cs_agi" class="text-white">Agi: </h5>
-					<h5 id="cs_int" class="text-white">Int: </h5>
-					<h5 id="cs_str" class="text-white">Str: </h5>
+			<h3 class="text-center text-white">Class Info</h3>
+			<div class="row  bg-white border-bottom rounded-top">
+				<div class="col-7">
+					<h5 id="cs_name" class="text-dark text-center">Class Name</h5>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 				</div>
-				<div class="col-6">
+				<div class="col">
 					<img id="char_por" class="character_portrait" src="{{ url_for('game.static', filename='resources/images/Splash.png') }}" alt="" />
 				</div>
-				
 			</div>
+			<div class="row bg-dark border-top rounded-bottom">
+				<div class="col">
+					<div class="row border-bottom">
+						<div class="col">
+							<h3 class="text-white text-center">Stats</h3>
+							<div class="row">
+								<div class="col">
+									<p id="cs_health" class="text-danger">Health: </p>
+								</div>
+								<div class="col">
+									<p id="cs_mana" class="text-info">Mana: </p>
+								</div>
+							</div>
+							<p id="cs_con" class="text-white">Con: </p>
+							<p id="cs_agi" class="text-white">Agi: </p>
+							<p id="cs_int" class="text-white">Int: </p>
+							<p id="cs_str" class="text-white">Str: </p>
+						</div>
+					</div>
+					<div class="row border-bottom">
+						<h3 class="text-white text-center">Skills</h3>
+					</div>
+					<div class="row">
+						<h3 class="text-white text-center">Equipment</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container col cs_left">
+			<h3 class="text-center text-white">Party</h3>
 		</div>
 	</div>
 </div>

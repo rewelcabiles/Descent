@@ -1,5 +1,7 @@
 .class_select_wrapper{
 	margin-top: 60px;
+	padding-left: 200px;
+	padding-right: 200px;
 }
 .character_portrait{
 	width: 100%;
@@ -9,8 +11,15 @@
 }
 
 .cs_mid{
-	padding-left: 100px;
-	padding-right: 100px;
+	padding-left: 80px;
+	padding-right: 80px;
 	margin-right: 40px;
 	margin-left: 40px;
+}
+
+.cs_left {
+}
+
+.cs_right {
+	
 }

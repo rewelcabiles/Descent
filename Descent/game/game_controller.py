@@ -31,10 +31,10 @@ class GameServer:
 
 	def on_new_game(self):
 		print("Server: New Game Event")
-		new_socket = Socket(request.sid, current_user.username)
-		self.clients[current_user.username] = new_socket
 		game_id = self.create_new_game()
+		new_socket = Socket(request.sid, current_user.username)
 		new_socket.game_id = game_id
+		self.clients[current_user.username] = new_socket
 		join_room(game_id)
 		socketio.emit("game_created", room=game_id)
 
