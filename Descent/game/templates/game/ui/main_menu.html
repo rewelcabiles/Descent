@@ -9,7 +9,9 @@
 			<div class="container btn-group-vertical">
 				<button class="ui-button ui-widget ui-corner-all mm_buttons" id="single_game">Start Game</button>
 				<br />
-				<button class="ui-button ui-widget ui-corner-all mm_buttons" id="coop_game">Co-Op Game</button>
+				<button class="ui-button ui-widget ui-corner-all mm_buttons" id="create_lobby">Create Lobby</button>
+				<br />
+				<button class="ui-button ui-widget ui-corner-all mm_buttons" id="join_lobby">Join Lobby</button>
 				<br />
 				<button class="ui-button ui-widget ui-corner-all mm_buttons" id="view_unlocks">View Unlocks</button>
 			</div>
@@ -17,5 +19,8 @@
 		<div class="col ">
 				<img class="mx-auto full_logo" src="{{ url_for('game.static', filename='resources/images/Splash.png') }}" alt="" />
 		</div>
+	</div>
+	<div id="mm_join_lobby" title="Enter Lobby Code" class=" container-fluid">
+		<input type="text" id="mm_join_lobby_code" class="text form-control">	
 	</div>
 </div>

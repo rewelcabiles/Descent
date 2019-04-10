@@ -19,7 +19,6 @@ class Division():
                 temp_map.append((x, y, 0))
         return temp_map
 
-
     def divide(self, map_points):
         sub1 = []
         sub2 = []
@@ -29,13 +28,13 @@ class Division():
         y_size.sort()
 
         if y_size[-1] - y_size[0] < x_size[-1] - x_size[0]:
-            rand_x = int((x_size[0] + x_size[-1]) / 2) #+ random.choice([-2, -1, 0, 1, 2])
+            rand_x = int((x_size[0] + x_size[-1]) / 2)  # + random.choice([-2, -1, 0, 1, 2])
             rand_y = random.choice(y_size)
             for x, y, v in map_points:
                 if x > rand_x:
-                    sub1.append((x,y,v))
+                    sub1.append((x, y, v))
                 if x < rand_x:
-                    sub2.append((x,y,v))
+                    sub2.append((x, y, v))
                 if x == rand_x:
                     self.new_map[self.new_map.index((x, y, v))] = (x, y, 1)
             self.new_map[self.new_map.index((rand_x, rand_y, 1))] = (rand_x, rand_y, 3)

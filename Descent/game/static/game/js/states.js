@@ -9,17 +9,51 @@ var state_mainmenu = function () {
         Game.state_stack.push(new state_game());
     });
 
+    socket.on("cs_screen", function(){
+        Game.state_stack.pop()
+        Game.state_stack.push(new state_class_select())
+    })
+
     //Canvas
     var canvas = getCanvas(),
         dimensions = getGameDimensions();
         
     //State Functions
+    this.join_lobby = function(){
+        let lobby_code = $("#mm_join_lobby_code").val()
+        $( "#mm_join_lobby" ).dialog("close");
+        socket.emit("join_lobby", lobby_code)
+    }
+
     this.onEnter = function(){
         $("#uiLayer").append(Game.ui[this.ui_name]);
+        $( "#mm_join_lobby" ).dialog({
+          autoOpen: false,
+          modal:true,
+          buttons: {
+            "Join Lobby": this.join_lobby,
+            Cancel: function() {
+              $( "#mm_join_lobby" ).dialog("close");
+            }
+          },
+          show: {
+            effect: "blind",
+            duration: 500
+          },
+          hide: {
+            effect: "blind",
+            duration: 500
+          }
+        });
+         
         $("#single_game").click(function(){
-            //socket.emit("start_game");
-            Game.state_stack.pop()
-            Game.state_stack.push(new state_class_select())
+            socket.emit('start_game');
+        });
+        $("#create_lobby").click(function(){
+            socket.emit('start_lobby');
+        });
+        $("#join_lobby").click(function(){
+            $("#mm_join_lobby").dialog( "open" );
         });
     };  
 
@@ -44,7 +78,9 @@ var state_class_select = function(){
     self=this;
 
     socket.on('class_data', function(data){
-        console.log(data)
+        self.lobby_id = data[1]
+        $("#lobby_id").html("Lobby ID: "+self.lobby_id);
+        data = data[0]
         let character_list = []
         for(index in data){
             let character = data[index]
@@ -61,6 +97,40 @@ var state_class_select = function(){
         self.set_data(character_list[0])
     });
 
+    socket.on('refresh_player_list', function(player_list){
+        $("#cs_party_info").empty();
+        for(player in player_list) {
+            player = player_list[player]
+            let new_member = `
+            <div class="row p-2">
+                <div class="col-2" id="cs_button_`+player["name"]+`">
+                </div>
+                <div class="col">
+                    <h4 class="ml-4">`+player["name"]+`</h4>
+                </div>
+                <div class="col" id="cs_char_`+player["name"]+`">
+                </div>
+             </div>
+            `
+            $("#cs_party_info").append(new_member)
+            if(player["status"] == 0 && player["name"] == username){
+                ready_button = `<button id="cs_ready_`+player["name"]+`" class="btn btn-success">READY</button>`
+                $("#cs_button_"+player["name"]).html(ready_button)
+            }
+            if(player["character"] == null){
+                charname = `<h4 class="" id="cs_char_`+player["name"]+`"> --- </h4>`
+            }else{
+                charname = `<h4 class="" id="cs_char_`+player["name"]+`"> `+player["character"]+` </h4>`
+            }
+            if(player["status"] == 0){
+                $("#cs_char_"+player["name"]).addClass("text-warning");
+            }else if(player["status"] == 1){
+                $("#cs_char_"+player["name"]).addClass("text-success");
+            }
+            $("#cs_char_"+player["name"]).html(charname)
+        }
+    })
+
     this.set_data = function(character){
         let stats = character["stats"]
         $('#cs_name').html(character["name"].toUpperCase());
@@ -76,22 +146,20 @@ var state_class_select = function(){
     this.create_event = function(character){
         $("#cs_"+character["name"]).click(function(){
             self.set_data(character)
+            socket.emit("char_selected", character["name"])
         });
     }
 
-    this.update = function (){
-        
-    };
-
     this.onEnter = function (){
         $("#uiLayer").append(Game.ui[this.ui_name]);
-        socket.emit('class_select');
+        socket.emit('request_classes');
 
     };
-    this.render  = function (){};
     this.onExit  = function (){
         Game.ui[this.ui_name].detach()
     };
+    this.render  = function (){};
+    this.update = function (){};
     this.onPause = function (){};
     this.onResume= function (){};
 }

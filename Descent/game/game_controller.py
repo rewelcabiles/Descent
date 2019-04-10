@@ -14,10 +14,13 @@ class Socket:
 		self.username = username
 		self.game_id = None
 		self.level = None
+		self.lobby = None
+		self.character = None
 
 
 class GameServer:
-	def __init__(self):
+	def __init__(self, server):
+		self.server = server
 		self.games = {}
 		self.clients = {}
 		self.running = True
