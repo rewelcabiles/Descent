@@ -23,13 +23,12 @@ var Game = {
     FPS: 30,
     timer:null,
     timerID: null, // interval
-
+    ui:{},
 
     state_stack: new StateStack(),
 
     set_ui: function(){
         let children = $("#uiLayer").children();
-        this.ui = {};
         for (var i=0; i<children.length; i++) {
           let child_id = children[i].id;
           this.ui[child_id] = $("#"+child_id)

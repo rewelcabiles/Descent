@@ -7,11 +7,14 @@ var state_mainmenu = function () {
     socket.on("game_created", function(){
         Game.state_stack.pop()
         Game.state_stack.push(new state_game());
+        socket.removeListener('game_created');
     });
 
     socket.on("cs_screen", function(){
+        console.log("SOCKET CS_SCREEn")
         Game.state_stack.pop()
         Game.state_stack.push(new state_class_select())
+        socket.removeListener('cs_screen');
     })
 
     //Canvas
@@ -27,6 +30,10 @@ var state_mainmenu = function () {
 
     this.onEnter = function(){
         $("#uiLayer").append(Game.ui[this.ui_name]);
+        Game.ui[this.ui_name].show()
+        console.log("MainMenuOnEnter")
+        // $("#uiLayer").append(Game.ui[this.ui_name]);
+        // $("#"+this.ui_name).show()
         $( "#mm_join_lobby" ).dialog({
           autoOpen: false,
           modal:true,
@@ -46,13 +53,14 @@ var state_mainmenu = function () {
           }
         });
          
-        $("#single_game").click(function(){
+        $("#single_game").unbind("click").bind('click', function(){
             socket.emit('start_game');
         });
-        $("#create_lobby").click(function(){
+        $("#create_lobby").unbind("click").bind('click', function(){
+            console.log("Creating Lobby")
             socket.emit('start_lobby');
         });
-        $("#join_lobby").click(function(){
+        $("#join_lobby").unbind("click").bind('click', function(){
             $("#mm_join_lobby").dialog( "open" );
         });
     };  
@@ -79,9 +87,11 @@ var state_class_select = function(){
 
     socket.on('class_data', function(data){
         self.lobby_id = data[1]
+        console.log(data)
         $("#lobby_id").html("Lobby ID: "+self.lobby_id);
         data = data[0]
         let character_list = []
+        $("#cs_class_buttons").empty();
         for(index in data){
             let character = data[index]
             let char_name = character["name"][0].toUpperCase() + character["name"].slice(1);
@@ -103,7 +113,7 @@ var state_class_select = function(){
             player = player_list[player]
             let new_member = `
             <div class="row p-2">
-                <div class="col-2" id="cs_button_`+player["name"]+`">
+                <div class="col-4 d-flex" id="cs_button_`+player["name"]+`">
                 </div>
                 <div class="col">
                     <h4 class="ml-4">`+player["name"]+`</h4>
@@ -114,14 +124,24 @@ var state_class_select = function(){
             `
             $("#cs_party_info").append(new_member)
             if(player["status"] == 0 && player["name"] == username){
-                ready_button = `<button id="cs_ready_`+player["name"]+`" class="btn btn-success">READY</button>`
+                ready_button = `<button id="cs_ready_`+player["name"]+`" class="btn btn-success">Ready</button>`
+                leave_button = `<button id="cs_leave" class="btn btn-danger mx-4">Exit</button>`
+                $("#cs_button_"+player["name"]).append(ready_button)
+                $("#cs_button_"+player["name"]).append(leave_button)
+                self.set_ready_event(player["name"], 0)
+            }else{
+                ready_button = `<button id="cs_ready_`+player["name"]+`" class="btn btn-warning">Cancel</button>`
                 $("#cs_button_"+player["name"]).html(ready_button)
+                self.set_ready_event(player["name"], 1)
             }
+
             if(player["character"] == null){
                 charname = `<h4 class="" id="cs_char_`+player["name"]+`"> --- </h4>`
+                $("#cs_ready_"+player["name"]).attr("disabled", true)
             }else{
                 charname = `<h4 class="" id="cs_char_`+player["name"]+`"> `+player["character"]+` </h4>`
             }
+
             if(player["status"] == 0){
                 $("#cs_char_"+player["name"]).addClass("text-warning");
             }else if(player["status"] == 1){
@@ -130,6 +150,20 @@ var state_class_select = function(){
             $("#cs_char_"+player["name"]).html(charname)
         }
     })
+
+    this.set_ready_event = function(name, status){
+        $("#cs_ready_"+name).unbind("click").bind('click', function(){
+            if(status == 0){
+                socket.emit("player_ready", 1);
+            }else if(status == 1){
+                socket.emit("player_ready", 0);
+            }
+        });
+        $('#cs_leave').unbind("click").bind('click', function(){
+            Game.state_stack.pop()
+            Game.state_stack.push(new state_mainmenu())
+        });
+    }
 
     this.set_data = function(character){
         let stats = character["stats"]
@@ -144,7 +178,7 @@ var state_class_select = function(){
     }
 
     this.create_event = function(character){
-        $("#cs_"+character["name"]).click(function(){
+        $("#cs_"+character["name"]).unbind("click").bind('click', function(){
             self.set_data(character)
             socket.emit("char_selected", character["name"])
         });
@@ -152,11 +186,17 @@ var state_class_select = function(){
 
     this.onEnter = function (){
         $("#uiLayer").append(Game.ui[this.ui_name]);
-        socket.emit('request_classes');
+        Game.ui[this.ui_name].show()
+        console.log("ClassSelectOnEnter")
+        
+        //socket.emit('request_classes');
 
     };
     this.onExit  = function (){
-        Game.ui[this.ui_name].detach()
+        window.onkeydown = null;
+        Game.ui[this.ui_name].slideUp('fast', function(){
+            $("#ui_class_select").detach();
+        });
     };
     this.render  = function (){};
     this.update = function (){};
