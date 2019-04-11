@@ -4,5 +4,5 @@ from Descent import app, socketio
 from flask_socketio import SocketIO
 
 if __name__ == '__main__':
-	socketio.run(app,debug=True, use_reloader=False)
+	socketio.run(app, use_reloader=False)
 

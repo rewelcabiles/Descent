@@ -17,7 +17,7 @@ class Factory():
 			self.world.WORLD["image"][tile_id]["file_name"] = "floor_stone_01.png"
 		if tile[2] == 3:
 
-			self.world.WORLD["image"][tile_id]["file_name"] = "door_right.png"
+			self.world.WORLD["image"][tile_id]["file_name"] = "door.png"
 			self.world.WORLD["tile"][tile_id]["walkable"] = True
 
 	def create_player(self, tile_id):

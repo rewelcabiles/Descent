@@ -5,9 +5,9 @@ var Camera = function(){
 	this.camera_velocity_x = 0;
 	this.camera_velocity_y = 0;
 	this.camera_acceleration = 2
-	this.camera_velocity_max = 10;
+	this.camera_velocity_max = 14;
 
-	this.scale = 0.6;
+	this.scale = 1;
 	
 	let dimensions = getGameDimensions()
 	this.viewport_width  = dimensions.width;
