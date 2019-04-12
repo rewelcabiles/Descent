@@ -18,11 +18,13 @@ class Server:
 
 	def remove_connection(self):
 		player = self.users[current_user.username]
-		self.lobby_handler.disconnect_player(player)
+		self.lobby_handler.disconnect_player(player.username)
+		del self.users[current_user.username]
 		print("Disconnected: " + current_user.username)
 
 	def sync_users(self):
 		if current_user.is_authenticated:
+			print("{} Has Joined The Server".format(current_user.username))
 			self.users[current_user.username] = Socket(request.sid, current_user.username)
 			emit('initial_user_info', {
 				'username': current_user.username})

@@ -105,6 +105,7 @@ var state_class_select = function(){
            'overflow': 'auto'
         });
         self.set_data(character_list[0])
+        socket.removeListener('cs_screen');
     });
 
     socket.on('refresh_player_list', function(player_list){
@@ -129,9 +130,11 @@ var state_class_select = function(){
                 $("#cs_button_"+player["name"]).append(ready_button)
                 $("#cs_button_"+player["name"]).append(leave_button)
                 self.set_ready_event(player["name"], 0)
-            }else{
+            }else if(player["status"] == 1 && player["name"] == username){
                 ready_button = `<button id="cs_ready_`+player["name"]+`" class="btn btn-warning">Cancel</button>`
+                leave_button = `<button id="cs_leave" class="btn btn-danger mx-4">Exit</button>`
                 $("#cs_button_"+player["name"]).html(ready_button)
+                $("#cs_button_"+player["name"]).append(leave_button)
                 self.set_ready_event(player["name"], 1)
             }
 
@@ -160,6 +163,7 @@ var state_class_select = function(){
             }
         });
         $('#cs_leave').unbind("click").bind('click', function(){
+            socket.emit("left_lobby")
             Game.state_stack.pop()
             Game.state_stack.push(new state_mainmenu())
         });
@@ -194,6 +198,7 @@ var state_class_select = function(){
     };
     this.onExit  = function (){
         window.onkeydown = null;
+        socket.removeListener('refresh_player_list');
         Game.ui[this.ui_name].slideUp('fast', function(){
             $("#ui_class_select").detach();
         });

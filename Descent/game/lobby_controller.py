@@ -13,12 +13,22 @@ class LobbyHandler:
 		socketio.on_event('join_lobby', self.on_join_lobby)
 		socketio.on_event('char_selected', self.on_character_select)
 		socketio.on_event('player_ready', self.on_player_ready)
+		socketio.on_event('left_lobby', self.disconnect_player)
 
-	def disconnect_player(self, player):
-		lobby_id = player.lobby.lobby_id
-		player.lobby = None
-		self.lobbies[lobby_id].remove_player(player.username)
-		self.refresh_player_list(lobby_id)
+	def disconnect_player(self, player=None):
+		if player is None:
+			player = current_user.username
+		player = self.server.get_user(player)
+		if player.lobby is not None:
+			print("{} has left the lobby".format(current_user.username))
+			lobby_id = player.lobby.lobby_id
+			player.lobby = None
+			self.lobbies[lobby_id].remove_player(player.username)
+			if self.lobbies[lobby_id].check_if_lobby_empty():
+				print("Deleting Lobby")
+				del self.lobbies[lobby_id]
+			else:
+				self.refresh_player_list(lobby_id)
 
 	def on_player_ready(self, data):
 		player = self.server.get_user(current_user.username)
@@ -80,6 +90,9 @@ class Lobby:
 
 	def check_if_game_start(self):
 		return any(player.lobby.status == 1 for player in self.players.values())
+
+	def check_if_lobby_empty(self):
+		return len(self.players) == 0
 
 	def add_player(self, player):
 		player.lobby = Lobby_Data(self.lobby_id)
