@@ -14,12 +14,17 @@
 		"x": 0,
 		"y": 0
 	},
-	
 	"image":{
 		"file_name": "NONE.png"
 	},
 	"can_move":{
 		"tile_destination": null
+	},
+	"character_stats": {
+		"int" : 1,
+		"str" : 1,
+		"con" : 1,
+		"agi" : 1
 	}
 }
 

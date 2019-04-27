@@ -29,30 +29,30 @@ class Systems():
 	def notified(self, message):
 		if message['type'] == 'tile_click':
 			self.pathing(message)
-			
+
 	def update(self, dt):
 		self.pathing_system.run_jobs(self.world)
 
 	def pathing(self, message):
-		entity_id = self.world.players[message["sent_by"]]
+		entity_id = message["entity_id"]
 		for job in self.pathing_system.pathing_jobs:
 			if job.get_id() == entity_id:
 				self.pathing_system.pathing_jobs.remove(job)
 
 		start_pos = self.world.get_component("position", entity_id)
 		start_pos = (start_pos['x'], start_pos['y'])
-		end_pos   = (message["position"][0], message["position"][1])
+		end_pos = (message["position"][0], message["position"][1])
 		path = a_star_search(self.world.grid, start_pos, end_pos)
 		self.pathing_system.add_to_jobs(Pathing_Job(entity_id, path, 10))
-		
 
 	def add_player(self):
 		spawn_points = []
 		for entity_id in self.world.WORLD["mask"].keys():
 			if self.world.has_components(entity_id, ["tile"]):
-				if self.world.WORLD["tile"][entity_id]["walkable"] == True:
+				if self.world.WORLD["tile"][entity_id]["walkable"] is True:
 					spawn_points.append(entity_id)
 		return self.world.factory.create_player(random.choice(spawn_points))
+
 
 class Pathing_System:
 	def __init__(self, message_board):
@@ -66,13 +66,14 @@ class Pathing_System:
 		for job in self.pathing_jobs:
 			if job.ct == job.mt:
 				next_path = job.path.pop(0)
-				next_path = {"x":next_path[0], "y": next_path[1]}
+				next_path = {"x": next_path[0], "y": next_path[1]}
 				world.WORLD["position"][job.entity_id]["x"] = next_path["x"]
 				world.WORLD["position"][job.entity_id]["y"] = next_path["y"]
 				self.message_board.add_to_queue({
-					"type": "send_packet",
-					"data": {"type":"move_entity","entity_id": job.entity_id, "pos": next_path}
-					})
+					"type": "move_entity",
+					"entity_id": job.entity_id,
+					"pos": next_path}
+					)
 				job.ct = 0
 
 				if len(job.path) == 0:
@@ -81,14 +82,13 @@ class Pathing_System:
 			else:
 				job.ct += 1
 
+
 class Pathing_Job:
 	def __init__(self, entity_id, path, mt):
 		self.entity_id = entity_id
 		self.path = path
-		self.mt = mt # Max Time
+		self.mt = mt  # Max Time
 		self.ct = 0  # Current Time
 
 	def get_id(self):
 		return self.entity_id
-
-
