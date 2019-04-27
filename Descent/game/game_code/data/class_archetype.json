@@ -1,0 +1,22 @@
+{
+	"warrior": {
+		"position" : null,
+		"image" : "warrior.png",
+		"character_stats" : {
+			"int" : 3,
+			"str" : 6,
+			"con" : 5,
+			"agi" : 4
+		}
+	},
+	"mage": {
+		"position" : null,
+		"image" : "character.png",
+		"character_stats" : {
+			"int" : 6,
+			"str" : 3,
+			"con" : 3,
+			"agi" : 6
+		}
+	}
+}

@@ -48,5 +48,7 @@ var RenderSystem = function(){
 		rpg.canvas.fillText("Camera Position X: "+rpg.camera.camera_x, 0,140); 
 		rpg.canvas.font = "15px Arial";
 		rpg.canvas.fillText("Camera Position Y: "+rpg.camera.camera_y, 0,180); 
+		rpg.canvas.font = "15px Arial";
+		rpg.canvas.fillText("Entities In World: "+Object.keys(rpg.world.WORLD["mask"]).length, 0,200); 
 	}
 }

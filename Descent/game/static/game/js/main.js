@@ -10,21 +10,31 @@ socket.on('initial_user_info', function(data) {
     username = data["username"];
 });
 
+
+
 var Game = {
     // Canvas to draw on
     canvas_width:   $(document).width(),
     canvas_height:  $(document).height(),
     canvasElement:  null,
-    uiLayer:        null,
     canvas :        null,
 
     // The game loop
     FPS: 30,
     timer:null,
     timerID: null, // interval
-
+    ui:{},
 
     state_stack: new StateStack(),
+
+    set_ui: function(){
+        let children = $("#uiLayer").children();
+        for (var i=0; i<children.length; i++) {
+          let child_id = children[i].id;
+          this.ui[child_id] = $("#"+child_id)
+          $("#"+child_id).detach();
+        }
+    },
 
     update: function () {
         this.state_stack.update();
@@ -53,20 +63,17 @@ var Game = {
         this.canvasElement = document.createElement("canvas");
         this.canvasElement.width = this.canvas_width;
         this.canvasElement.height = this.canvas_height;
-        
+        this.canvasElement.id = "main_canvas";
         this.canvas = this.canvasElement.getContext("2d");
 
-        this.uiLayer = document.createElement('div');
-        this.uiLayer.width = this.canvas_width;
-        this.uiLayer.height = this.canvas_height;
-        this.uiLayer.className += ' uiLayer';
-        wrapper.appendChild(this.uiLayer);
         wrapper.appendChild(this.canvasElement);
     },
 
     init: function () {
+        this.set_ui()
         this.setupCanvas(document.getElementById("main_window"));
         this.timer = 1000/this.FPS;
+        
         this.startGame();
     },
 }
